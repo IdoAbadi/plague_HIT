@@ -10,3 +10,7 @@ void print_region(const Region* region) {
 	printf("Development Level: %d\n", region->development_level);
 	printf("Population Density: %d\n", region->population_density);
 }
+
+void SetUpWorld() {
+
+}

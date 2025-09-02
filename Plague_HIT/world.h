@@ -11,6 +11,7 @@ typedef struct {
 } Region;
 
 void print_region(const Region* region);
+void SetUpWorld();
 
 #endif
 #pragma once
