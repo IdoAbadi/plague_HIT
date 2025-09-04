@@ -11,6 +11,6 @@ void print_region(const Region* region) {
 	printf("Population Density: %d\n", region->population_density);
 }
 
-void SetUpWorld() {
+void SetUpWorld(const node* node) {
 
 }
