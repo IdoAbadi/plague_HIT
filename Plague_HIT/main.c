@@ -3,10 +3,23 @@
 #include "world.h"
 
 void main() {
-    Disease disease = { "LirIdo", 80, 40, 20 };
-    Region  region = { 1000000, 100, 0, 50, 60, 70 };
-
-    print_disease(&disease);
-    print_region(&region);
+    Disease* disease;
+    World* world = malloc(sizeof(World));
+    if (!world) {
+        printf("world allocation failed");
+    }
+    Regions* world_regions = malloc(sizeof(Regions*));
+    if (!world_regions) {
+        printf("world regions allocation failed");
+    }
+    //print_disease(&disease);
+    //print_region(&world_regions);
+    SetUpWorld(world, world_regions);
+    while (world->sick_people != 0 && world->healthy_people != 0 || world->disease_cured == 1)
+    {
+        while (world_regions) {
+            //do actions on regions
+        }
+    }
 
 }

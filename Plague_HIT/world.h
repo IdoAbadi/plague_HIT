@@ -2,16 +2,27 @@
 #define World_H
 
 typedef struct {
+    char name[50];
     int healthy_people;
     int sick_people;
     int dead_people;
     int research_investment;
     int development_level;
     int population_density;
-} Region;
+    struct Regions* next_region;
+} Regions;
 
-void print_region(const Region* region);
-void SetUpWorld();
+typedef struct {
+    int disease_detected;
+    int disease_cured;
+    int healthy_people;
+    int sick_people;
+    int dead_people;
+} World;
+
+void print_World(const World* world);
+void print_region(const Regions* region);
+void SetUpWorld(World* world, const Regions* world_regions);
 
 #endif
 #pragma once
