@@ -20,6 +20,7 @@ typedef struct {
     int dead_people;
 } World;
 
+void DayLoop(Regions* current_region);
 void print_World(const World* world);
 void print_region(const Regions* region);
 void SetUpWorld(World* world, const Regions* world_regions);

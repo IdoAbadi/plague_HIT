@@ -19,12 +19,21 @@ void print_World(const World* world) {
 }
 
 void SetUpWorld(World* world ,const Regions* world_regions) {
+	Regions* current_region = world_regions;
 	world->disease_cured = 0;
 	world->disease_detected = 0;
-	while (world_regions)
+	while (current_region)
 	{
-		world->healthy_people += world_regions->healthy_people;
-		world->sick_people += world_regions->sick_people;
-		world_regions = world_regions->next_region;
+		world->healthy_people += current_region->healthy_people;
+		world->sick_people += current_region->sick_people;
+		current_region = current_region->next_region; // moves to next item
+	}
+}
+
+
+void DayLoop(Regions* current_region) {
+	while (current_region) {
+		//do actions on regions
+		current_region = current_region->next_region; // moves to next item
 	}
 }
