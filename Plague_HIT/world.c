@@ -40,3 +40,24 @@ void DayLoop(Regions* current_region, const Disease* disease, const World* world
 		current_region = current_region->next_region; // moves to next item
 	}
 }
+
+void closing_borders(Regions* region, Disease* disease){
+	disease->infectiousness = (int)(disease->infectiousness * 0.7);
+	printf("Borders closed in %s, infectiousness reduced to %d\n", region->name);
+}
+
+void curfew(Regions* region) {
+	region->population_density = (int)(region->population_density * 0.4);
+	printf("Curfew imposed in %s, population density reduced to %d\n", region->name);
+}
+
+void invest_in_research(Regions* region, World* world) {
+	if (region->research_investment > 1000) {
+		world->disease_cured = 1;
+		printf("Disease cured due to research investment in %s!\n", region->name);
+	}
+	else {
+		region->research_investment += 100; // increase investment
+		printf("Increased research investment in %s to %d\n", region->name, region->research_investment);
+	}
+}

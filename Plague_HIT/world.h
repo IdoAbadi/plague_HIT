@@ -24,6 +24,9 @@ void DayLoop(Regions* current_region);
 void print_World(const World* world);
 void print_region(const Regions* region);
 void SetUpWorld(World* world, const Regions* world_regions);
+void closing_borders(Regions* region, Disease* disease);
+void curfew(Regions* region);
+void invest_in_research(Regions* region, World* world);
 
 #endif
 #pragma once

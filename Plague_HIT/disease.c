@@ -39,3 +39,21 @@ int Kill(int infected, int leathality) {
 int Cure() {
 
 }
+
+void infectiosness_details(Disease* disease) {
+    printf("How contagious is the disease? (1-100): \n");
+    if (scanf("%d", &disease->infectiousness) != 1 || disease->infectiousness < 1 || disease->infectiousness > 100) {
+        printf("Invalid input. Please enter a value between 1 and 100.\n");
+        disease->infectiousness = 1;
+    }
+    printf("How strong is it? (1-100): \n");
+    if (scanf("%d", &disease->severity) != 1 || disease->severity < 1 || disease->severity > 100) {
+        printf("Invalid input. Please enter a value between 1 and 100.\n");
+        disease->severity = 1;
+    }
+    printf("How deadly is it? (1-100): \n");
+    if (scanf("%d", &disease->lethality) != 1 || disease->lethality < 1 || disease->lethality > 100) {
+        printf("Invalid input. Please enter a value between 1 and 100.\n");
+        disease->lethality = 1;
+    }
+}
