@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "disease.h"
 #include "world.h"
 
 void print_region(const Regions* region) {
@@ -30,10 +31,12 @@ void SetUpWorld(World* world ,const Regions* world_regions) {
 	}
 }
 
-
-void DayLoop(Regions* current_region) {
+void DayLoop(Regions* current_region, const Disease* disease, const World* world) {
 	while (current_region) {
 		//do actions on regions
+		Infect(disease->infectiousness, current_region->sick_people, world->healthy_people);
+		Kill(current_region->sick_people, disease->lethality);
+		//Cure()
 		current_region = current_region->next_region; // moves to next item
 	}
 }

@@ -1,8 +1,10 @@
 #include<stdio.h>
+#include <time.h>
 #include "disease.h"
 #include "world.h"
 
 void main() {
+    srand(time(NULL)); // seed randomness
     Disease disease;
     World* world = malloc(sizeof(World*));
     if (!world) {
