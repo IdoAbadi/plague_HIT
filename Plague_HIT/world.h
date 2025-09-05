@@ -20,13 +20,15 @@ typedef struct {
     int dead_people;
 } World;
 
-void DayLoop(Regions* current_region);
+void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter);
 void print_World(const World* world);
 void print_region(const Regions* region);
 void SetUpWorld(World* world, const Regions* world_regions);
-void closing_borders(Regions* region, Disease* disease);
-void curfew(Regions* region);
-void invest_in_research(Regions* region, World* world);
+void ClosingBorders(Regions* region, Disease* disease);
+void Curfew(Regions* region, Disease* disease);
+void InvestInResearch(Regions* region, World* world);
+void ChooseEvent(Regions* current_region, Disease* disease, World* world);
+
 
 #endif
 #pragma once

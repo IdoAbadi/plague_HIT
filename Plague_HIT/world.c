@@ -31,27 +31,59 @@ void SetUpWorld(World* world ,const Regions* world_regions) {
 	}
 }
 
-void DayLoop(Regions* current_region, const Disease* disease, const World* world) {
+void ChooseEvent(Regions* current_region, Disease* disease, World* world) {
+	int event = rand() % 6;//number of events +1
+	switch (event)
+	{
+	case 0:
+		if (world->disease_detected == 1) {
+			ClosingBorders(current_region, disease);
+		}
+		else {
+			printf("No event this week in %s.\n", current_region->name);
+		}
+		break;
+	case 1:
+		if (world->disease_detected == 1) {
+			Curfew(current_region, disease);
+		}
+		else {
+			printf("No event this week in %s.\n", current_region->name);
+		}
+		break;
+	case 2:
+		//something
+		break;
+	default:
+		printf("No event this week in %s.\n", current_region->name);
+		break;
+	}
+}
+
+void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter) {
 	while (current_region) {
 		//do actions on regions
 		Infect(disease->infectiousness, current_region->sick_people, world->healthy_people);
 		Kill(current_region->sick_people, disease->lethality);
+		if (day_counter % 7 == 0) {
+			ChooseEvent(current_region, disease, world);
+		}
 		//Cure()
 		current_region = current_region->next_region; // moves to next item
 	}
 }
 
-void closing_borders(Regions* region, Disease* disease){
+void ClosingBorders(Regions* region, Disease* disease){
 	disease->infectiousness = (int)(disease->infectiousness * 0.7);
 	printf("Borders closed in %s\n", region->name);
 }
 
-void curfew(Regions* region, Disease* disease) {
+void Curfew(Regions* region, Disease* disease) {
 	disease->infectiousness = (int)(disease->infectiousness * 0.4);
 	printf("Curfew imposed in %s\n", region->name);
 }
 
-void invest_in_research(Regions* region, World* world) {
+void InvestInResearch(Regions* region, World* world) {
 	if (region->research_investment > 1000) {
 		world->disease_cured = 1;
 		printf("Disease cured due to research investment in %s!\n", region->name);

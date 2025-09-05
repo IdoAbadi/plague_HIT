@@ -5,12 +5,9 @@
 
 void main() {
     srand(time(NULL)); // seed randomness
+    int day_counter = 1;
     Disease disease;
-    World* world = malloc(sizeof(World*));
-    if (!world) {
-        printf("world allocation failed");
-        return;
-    }
+    World world; // if pointer decay issues come up allocate dynamically to solve
     Regions* world_regions = malloc(sizeof(Regions*));
     if (!world_regions) {
         printf("world regions allocation failed");
@@ -18,11 +15,12 @@ void main() {
     }
     //print_disease(&disease);
     //print_region(&world_regions);
-    SetUpWorld(world, world_regions);
-    while (world->sick_people != 0 && world->healthy_people != 0 || world->disease_cured == 1)
+    SetUpWorld(&world, world_regions);
+    SetUpDisease(&disease);
+    while (world.sick_people != 0 && world.healthy_people != 0 || world.disease_cured == 1)
     {
         Regions* current_region = world_regions; // precaution to not run up loop
-        DayLoop(current_region);
+        DayLoop(current_region, &disease, &world, day_counter);
+        day_counter++;
     }
-
 }
