@@ -13,6 +13,12 @@ void print_disease(const Disease* disease);
 int Infect(int infectiousness, int infected, int healthy);
 int Kill(int infected, int leathality);
 int Cure();
-void infectiosness_details(Disease* disease);
+int HowContaigous(int tmp);
+int HowSevere(int tmp);
+int HowLeathal(int tmp);
+
+void SetUpDisease(Disease* disease);
+void clean_input_buffer();
+
 #endif
 #pragma once

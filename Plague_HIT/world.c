@@ -43,12 +43,12 @@ void DayLoop(Regions* current_region, const Disease* disease, const World* world
 
 void closing_borders(Regions* region, Disease* disease){
 	disease->infectiousness = (int)(disease->infectiousness * 0.7);
-	printf("Borders closed in %s, infectiousness reduced to %d\n", region->name);
+	printf("Borders closed in %s\n", region->name);
 }
 
-void curfew(Regions* region) {
-	region->population_density = (int)(region->population_density * 0.4);
-	printf("Curfew imposed in %s, population density reduced to %d\n", region->name);
+void curfew(Regions* region, Disease* disease) {
+	disease->infectiousness = (int)(disease->infectiousness * 0.4);
+	printf("Curfew imposed in %s\n", region->name);
 }
 
 void invest_in_research(Regions* region, World* world) {
