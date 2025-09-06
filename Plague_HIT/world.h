@@ -29,11 +29,11 @@ void ClosingBorders(Regions* region, Disease* disease);
 void Curfew(Regions* region, Disease* disease);
 void InvestInResearch(Regions* region, World* world);
 void ChooseEvent(Regions* current_region, Disease* disease, World* world);
-void Vaccine(Regions* region, Disease* disease, World* world);
+//void Vaccine(Regions* region, Disease* disease, World* world);
 void anti_vaxxers(Regions* region, Disease* disease);
-void vaccine_progress_up(Regions* region, World* world);
-void vaccine_progress_down(Regions* region, World* world);
-
+void vaccine_progress_up(World* world);
+void vaccine_progress_down(World* world);
+void IsCureReached(World* world);
 
 
 #endif

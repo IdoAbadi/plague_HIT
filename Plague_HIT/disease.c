@@ -47,7 +47,7 @@ int Cure() {
 void SetUpDisease(Disease* disease) {
     int tmp = 0;
     printf("What's the name of your disease?\n");
-    scanf_s("%49s", &disease->name);
+    scanf("%49s", &disease->name);
     disease->infectiousness = HowContaigous(tmp);
     disease->severity = HowSevere(tmp);
     disease->lethality = HowLeathal(tmp);
@@ -60,7 +60,7 @@ int HowContaigous(int tmp) {
         return tmp;
     }
     else {
-        printf("invalid value\n");
+        printf("invalid value.\n");
         HowContaigous(tmp);
     }
 }
@@ -72,7 +72,7 @@ int HowSevere(int tmp) {
         return tmp;
     }
     else {
-        printf("invalid value\n");
+        printf("invalid value.\n");
         HowSevere(tmp);
     }
 }
@@ -84,12 +84,12 @@ int HowLeathal(int tmp) {
         return tmp;
     }
     else {
-        printf("invalid value\n");
+        printf("invalid value.\n");
         HowLeathal(tmp);
     }
 }
 
-void plague_mutation(Disease* disease) {
+void plague_mutation(Disease* disease) {//incorrect need to fix
     if (disease->infectiousness >= 100) {
         return; // No mutations if already max infectiousness
     }
@@ -113,7 +113,6 @@ void plague_mutation(Disease* disease) {
         if (disease->lethality > 100) disease->lethality = 100;
     }
 }
-
 
 void clean_input_buffer() {
     int c;
