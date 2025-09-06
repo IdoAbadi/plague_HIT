@@ -1,8 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
 #include "disease.h"
 
-#define _CRT_SECURE_NO_WARNINGS
-#pragma warning(disable:6031) // gets rid of warning to check if scanf was succesful
+#pragma warning(disable:6031) // gets rid of warning to check if scanf_s was succesful
 
 void print_disease(const Disease* disease) {
 	printf("Disease: %s\n", disease->name);
@@ -46,7 +47,7 @@ int Cure() {
 void SetUpDisease(Disease* disease) {
     int tmp = 0;
     printf("What's the name of your disease?\n");
-    scanf("%49s", &disease->name);
+    scanf_s("%49s", &disease->name);
     disease->infectiousness = HowContaigous(tmp);
     disease->severity = HowSevere(tmp);
     disease->lethality = HowLeathal(tmp);
@@ -54,7 +55,7 @@ void SetUpDisease(Disease* disease) {
 
 int HowContaigous(int tmp) {
     printf("How contagious is the disease? (1-100): \n");
-    scanf("%d", &tmp);
+    scanf_s("%d", &tmp);
     if (tmp > 0 && tmp < 101) {
         return tmp;
     }
@@ -66,7 +67,7 @@ int HowContaigous(int tmp) {
 
 int HowSevere(int tmp) {
     printf("How severe is it? (1-100): \n");
-    scanf("%d", &tmp);
+    scanf_s("%d", &tmp);
     if (tmp > 0 && tmp < 101) {
         return tmp;
     }
@@ -78,7 +79,7 @@ int HowSevere(int tmp) {
 
 int HowLeathal(int tmp) {
     printf("How deadly is it? (1-100): \n");
-    scanf("%d", &tmp);
+    scanf_s("%d", &tmp);
     if (tmp > 0 && tmp < 101) {
         return tmp;
     }
@@ -87,6 +88,32 @@ int HowLeathal(int tmp) {
         HowLeathal(tmp);
     }
 }
+
+void plague_mutation(Disease* disease) {
+    if (disease->infectiousness >= 100) {
+        return; // No mutations if already max infectiousness
+    }
+
+    int param = rand() % 3;        
+	int change = (rand() % 11) - 5;  // From -5 to 5
+
+    if (param == 0) {
+        disease->infectiousness += change;
+        if (disease->infectiousness < 1)   disease->infectiousness = 1;
+        if (disease->infectiousness > 100) disease->infectiousness = 100;
+    }
+    else if (param == 1) {
+        disease->severity += change;
+        if (disease->severity < 1)   disease->severity = 1;
+        if (disease->severity > 100) disease->severity = 100;
+    }
+    else { // param == 2
+        disease->lethality += change;
+        if (disease->lethality < 1)   disease->lethality = 1;
+        if (disease->lethality > 100) disease->lethality = 100;
+    }
+}
+
 
 void clean_input_buffer() {
     int c;

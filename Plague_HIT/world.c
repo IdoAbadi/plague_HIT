@@ -93,3 +93,70 @@ void InvestInResearch(Regions* region, World* world) {
 		printf("Increased research investment in %s to %d\n", region->name, region->research_investment);
 	}
 }
+
+void Vaccine(Regions* region, Disease* disease, World* world) {
+	if (!world || !region || !disease) {
+		return; // if one is null, return (defense the code from crashing)
+	}
+	if (world->disease_detected == 0) {
+		return; // can't vaccinate if disease not detected
+	}
+
+	int new_infectiousness = (int)(disease->infectiousness * 0.9);
+	if (new_infectiousness < 1) {
+		new_infectiousness = 1; // so the disease will never be completely gone
+	}
+
+	if (new_infectiousness < disease->infectiousness) {
+		disease->infectiousness = new_infectiousness;
+		printf("Vaccine deployed in %s, reducing infectiousness to %d\n", region->name, disease->infectiousness);
+	}
+}
+
+void anti_vaxxers(Regions* region, Disease* disease) {
+	if (!region || !disease) {
+		return; // defense the code from crashing
+	}
+	disease->infectiousness += 5; // increase infectiousness due to anti-vaxxer movement
+	
+	if (disease->infectiousness > 100) {
+		disease->infectiousness = 100; // if infectiousness goes over 100, cap it at 100
+	}
+	printf("Anti-vaxxer movement in %s increased infectiousness to %d\n", region->name, disease->infectiousness);
+}
+
+void vaccine_progress_up(Regions* region, World* world) {
+	if (!region || !world) {
+		return; // defense the code from crashing
+	}
+	if (world->disease_detected == 0) {
+		return; // can't progress vaccine if disease not detected
+	}
+	if (world->vaccine_progress > 100) {
+		world->vaccine_progress = 100; // cap at 100
+		return;
+	}
+	world->vaccine_progress += 10; // increase vaccine progress
+	if (world->vaccine_progress > 100) {
+		world->vaccine_progress = 100; // cap at 100
+	}
+	printf("Vaccine progress in %s increased to %d/100.\n", region->name, world->vaccine_progress);
+}
+
+void vaccine_progress_down(Regions* region, World* world) {
+	if (!region || !world) {
+		return; // defense the code from crashing
+	}
+	if (world->disease_detected == 0) {
+		return; // can't regress vaccine if disease not detected
+	}
+	if (world->vaccine_progress < 0) {
+		world->vaccine_progress = 0; // cap at 0
+		return;
+	}
+	world->vaccine_progress -= 30; // decrease vaccine progress
+	if (world->vaccine_progress < 0) {
+		world->vaccine_progress = 0; // cap at 0
+	}
+	printf("Vaccine progress in %s decreased to %d/100.\n", region->name, world->vaccine_progress);
+}

@@ -18,7 +18,9 @@ int HowSevere(int tmp);
 int HowLeathal(int tmp);
 
 void SetUpDisease(Disease* disease);
+void plague_mutation(Disease* disease);
 void clean_input_buffer();
+
 
 #endif
 #pragma once
