@@ -89,7 +89,7 @@ int HowLeathal(int tmp) {
     }
 }
 
-void plague_mutation(Disease* disease) {//incorrect need to fix
+/*void plague_mutation(Disease* disease) {//incorrect need to fix
     if (disease->infectiousness >= 100) {
         return; // No mutations if already max infectiousness
     }
@@ -112,7 +112,51 @@ void plague_mutation(Disease* disease) {//incorrect need to fix
         if (disease->lethality < 1)   disease->lethality = 1;
         if (disease->lethality > 100) disease->lethality = 100;
     }
+}*/
+
+void mutate_infectiousness(Disease* disease) {
+        if (disease->infectiousness >= 100) {
+        return; // No mutations if already at max
+    }
+    int change = (rand() % 11) - 5;  // From -5 to 5
+    disease->infectiousness += change;
+    if (disease->infectiousness < 1)   disease->infectiousness = 1;
+	if (disease->infectiousness > 100) disease->infectiousness = 100;
 }
+
+void mutate_severity(Disease* disease) {
+    if (disease->severity >= 100) {
+        return; // No mutations if already at max
+	}
+    int change = (rand() % 11) - 5;  // From -5 to 5
+    disease->severity += change;
+    if (disease->severity < 1)   disease->severity = 1;
+    if (disease->severity > 100) disease->severity = 100;
+}
+
+void mutate_lethality(Disease* disease) {
+    if (disease->lethality >= 100) {
+        return; // No mutations if already at max
+    }
+    int change = (rand() % 11) - 5;  // From -5 to 5
+    disease->lethality += change;
+    if (disease->lethality < 1)   disease->lethality = 1;
+    if (disease->lethality > 100) disease->lethality = 100;
+}
+
+void plague_mutation(Disease* disease) {
+    int param = rand() % 3; // Randomly choose which parameter to mutate
+    if (param == 0) {
+        mutate_infectiousness(disease);
+    }
+    else if (param == 1) {
+        mutate_severity(disease);
+    }
+    else { 
+        mutate_lethality(disease);
+    }
+}
+
 
 void clean_input_buffer() {
     int c;
