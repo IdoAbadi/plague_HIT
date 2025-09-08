@@ -24,12 +24,18 @@
     <ClCompile Include="world.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileFuncs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="disease.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="world.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileFuncs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

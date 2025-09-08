@@ -12,7 +12,7 @@ void print_disease(const Disease* disease) {
 	printf("Lethality: %d\n", disease->lethality);
 }
 
-int Infect(int infectiousness, int infected, int healthy) {
+int Infect(int infectiousness, int infected, int healthy) { // add population density to infect calculation
     double expected = (infectiousness / 100.0) * infected;// scale infections by infectiousness
     int variation = rand() % (infected + 1); // random 0..infected
     int new_infected = (int)(expected * 0.7 + variation * 0.3);

@@ -1,24 +1,25 @@
 #ifndef World_H
 #define World_H
+#include "disease.h"
 
 typedef struct {
     char name[50];
     int healthy_people;
     int sick_people;
     int dead_people;
-    int research_investment;
-    int development_level;
-    int population_density;
+    int research_investment;// 0-100
+    int development_level; // 1-10
+    int population_density; // 1-10
     struct Regions* next_region;
 } Regions;
 
 typedef struct {
-    int disease_detected;
-    int disease_cured;
+    int disease_detected;// 0-1
+    int disease_cured;// 0-1
     int healthy_people;
     int sick_people;
     int dead_people;
-	int vaccine_progress;
+	int vaccine_progress;// 0-1000
 } World;
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter);

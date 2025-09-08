@@ -3,9 +3,9 @@
 
 typedef struct {
     char name[50];
-    int infectiousness;
-    int severity;
-    int lethality;
+    int infectiousness;// 1-100
+    int severity;// 0-100
+    int lethality;// 0-100
 } Disease; 
 
 int Infect(int infectiousness, int infected, int healthy);
