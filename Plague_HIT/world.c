@@ -97,22 +97,6 @@ void IsCureReached(World* world) {
 	}
 }
 
-//void Vaccine(Regions* region, Disease* disease, World* world) {
-//	if (world->disease_detected == 0) {
-//		return; // can't vaccinate if disease not detected
-//	}
-//
-//	int new_infectiousness = (int)(disease->infectiousness * 0.9);
-//	if (new_infectiousness < 1) {
-//		new_infectiousness = 1; // so the disease will never be completely gone
-//	}
-//
-//	if (new_infectiousness < disease->infectiousness) {
-//		disease->infectiousness = new_infectiousness;
-//		printf("Vaccine deployed in %s, reducing infectiousness to %d\n", region->name, disease->infectiousness);
-//	}
-//}
-
 void anti_vaxxers(Regions* region, Disease* disease) {
 	disease->infectiousness += 5; // increase infectiousness due to anti-vaxxer movement
 	if (disease->infectiousness > 100) {
@@ -142,4 +126,23 @@ void vaccine_progress_down(World* world) {
 	}
 	world->vaccine_progress -= 30; // decrease vaccine progress
 	printf("Vaccine progress decreased.\n");
+}
+
+void public_opinion_escalate(Regions* region, Disease* disease) {
+	disease->infectiousness = (int)(disease->infectiousness * 1.15);
+	printf("Public opinion has increased the infectiousness to %d\n", disease->infectiousness);
+}
+
+void public_opinion_mitigate(Regions* region, Disease* disease) {
+	disease->infectiousness = (int)(disease->infectiousness * 0.85);
+	printf("Public opinion mitigated the infectiousness to %d", disease->infectiousness);
+}
+
+void public_opinion(Regions* region, Disease* disease) {
+	if ((rand() % 2) == 0) {
+		prublic_opinion_escalate(region, disease);
+	}
+	else {
+		public_opinion_mitigate(region, disease);
+	}
 }
