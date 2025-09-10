@@ -4,10 +4,11 @@
 
 typedef struct {
     char name[50];
-    int healthy_people;
-    int sick_people;
-    int dead_people;
-    int research_investment;// 0-100
+    int healthy_people; //set to population 
+    int sick_people;// starts at 0
+    int dead_people;// starts at 0
+    int research_investment; // 0-100 starts at 0
+    int research_resources; // 1-100
     int development_level; // 1-10
     int population_density; // 1-10
     struct Regions* next_region;

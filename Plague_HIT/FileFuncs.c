@@ -38,8 +38,9 @@ void GetRegionInfo(FILE* RegionData, Regions* region) {
 	char buffer[SIZE];
 	if (fgets(buffer, SIZE, RegionData)) {// read name
 		strncpy(region->name, buffer, sizeof(region->name));
+		region->name[sizeof(region->name) - 1] = '\0'; // ensure null-termination
 	}
-	region->name[strcspn(region->name, "\r\n")] = 0;
+	region->name[strcspn(region->name, "\r\n")] = 0; // strips new line character
 	if (fgets(buffer, SIZE, RegionData)) {// read healthy people
 		region->healthy_people = atoi(buffer); // atoi = ascii to interger
 	}
@@ -48,6 +49,12 @@ void GetRegionInfo(FILE* RegionData, Regions* region) {
 	}
 	if (fgets(buffer, SIZE, RegionData)) {// read dead people
 		region->dead_people = atoi(buffer);
+	}
+	if (fgets(buffer, SIZE, RegionData)) {// read development level
+		region->research_investment = atoi(buffer);
+	}
+	if (fgets(buffer, SIZE, RegionData)) {// read development level
+		region->research_resources = atoi(buffer);
 	}
 	if (fgets(buffer, SIZE, RegionData)) {// read development level
 		region->development_level = atoi(buffer);

@@ -1,0 +1,120 @@
+United States & Canada
+370000000
+0
+0
+0
+85
+9
+4
+Latin America & Caribbean
+660000000
+0
+0
+0
+30
+7
+6
+Western Europe
+420000000
+0
+0
+0
+80
+10
+6
+Eastern Europe
+260000000
+0
+0
+0
+50
+7
+4
+North Africa
+260000000
+0
+0
+0
+25
+6
+4
+Sub-Saharan Africa
+1140000000
+0
+0
+0
+15
+4
+5
+Middle East
+360000000
+0
+0
+0
+45
+7
+4
+South Asia
+1900000000
+0
+0
+0
+20
+6
+9
+China & Mongolia
+1410000000
+0
+0
+0
+60
+8
+7
+Japan, Korea, and Taiwan
+225000000
+0
+0
+0
+90
+9
+8
+Southeast Asia
+680000000
+0
+0
+0
+35
+7
+8
+Oceania 
+13000000
+0
+0
+0
+10
+6
+4
+Australia
+27000000
+0
+0
+0
+70
+9
+2
+New Zealand
+5000000
+0
+0
+0
+60
+9
+3
+Central Asia
+120000000
+0
+0
+0
+20
+6
+3
