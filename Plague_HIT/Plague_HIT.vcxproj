@@ -137,6 +137,9 @@
     <ClInclude Include="FileFuncs.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="RegionsData.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

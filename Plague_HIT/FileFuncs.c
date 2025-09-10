@@ -19,6 +19,21 @@ void CloseRegionDataFile(FILE* RegionData) {
 	fclose(RegionData);
 }
 
+Regions* AllocateRegions(int regions_amount) {
+	int regions_to_allocate = regions_amount - 1;
+	Regions* start_region = malloc(sizeof(Regions));
+	Regions* curr_region = start_region;
+	for (int i = 0; i < regions_to_allocate; i++) {
+		Regions* new_region = malloc(sizeof(Regions));
+		if (!new_region) {
+			break;
+		}
+		curr_region->next_region = new_region;
+		curr_region = new_region;
+	}
+	return start_region;
+}
+
 void GetRegionInfo(FILE* RegionData, Regions* region) {
 	char buffer[SIZE];
 	if (fgets(buffer, SIZE, RegionData)) {// read name
