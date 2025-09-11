@@ -4,8 +4,6 @@
 #include "FileFuncs.h"
 #include "world.h"
 
-#define SIZE 256
-
 FILE* OpenRegionData() {
 	FILE* RegionData = fopen("RegionsData", 'r');
 	if (!RegionData) {
@@ -22,11 +20,15 @@ void CloseRegionDataFile(FILE* RegionData) {
 Regions* AllocateRegions(int regions_amount) {
 	int regions_to_allocate = regions_amount - 1;
 	Regions* start_region = malloc(sizeof(Regions));
+	if (!start_region) {
+		return NULL;
+	}
 	Regions* curr_region = start_region;
 	for (int i = 0; i < regions_to_allocate; i++) {
 		Regions* new_region = malloc(sizeof(Regions));
 		if (!new_region) {
-			break;
+			printf("failed allocation on region number %d", i);
+			return start_region;
 		}
 		curr_region->next_region = new_region;
 		curr_region = new_region;
@@ -61,5 +63,16 @@ void GetRegionInfo(FILE* RegionData, Regions* region) {
 	}
 	if (fgets(buffer, SIZE, RegionData)) {// read population density
 		region->population_density = atoi(buffer);
+	}
+}
+
+void SetRegionsParams(Regions* start_region, FILE* Region_Data) {
+	Regions* curr_region = start_region;
+	Regions* next_region = curr_region->next_region;
+	while (curr_region)
+	{
+		GetRegionInfo(Region_Data, curr_region);
+		curr_region = next_region;
+		next_region = curr_region->next_region;
 	}
 }

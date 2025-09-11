@@ -31,7 +31,7 @@ void SetUpWorld(World* world ,const Regions* world_regions) {
 	}
 }
 
-void ChooseEvent(Regions* current_region, Disease* disease, World* world) {
+void ChooseEvent(Regions* current_region, Disease* disease, World* world) { // not finished
 	int event = rand() % 6;//number of events +1
 	switch (event)
 	{
@@ -65,7 +65,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
 		//do actions on regions
 		Infect(disease->infectiousness, current_region->sick_people, world->healthy_people);
 		Kill(current_region->sick_people, disease->lethality);
-		if (day_counter % 7 == 0) {
+		if (day_counter % 7 == 0) { // event can happen once a week
 			ChooseEvent(current_region, disease, world);
 		}
 		//Cure()
@@ -140,7 +140,7 @@ void public_opinion_mitigate(Regions* region, Disease* disease) {
 
 void public_opinion(Regions* region, Disease* disease) {
 	if ((rand() % 2) == 0) {
-		prublic_opinion_escalate(region, disease);
+		public_opinion_escalate(region, disease);
 	}
 	else {
 		public_opinion_mitigate(region, disease);

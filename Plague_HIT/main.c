@@ -7,17 +7,12 @@
 void main() {
     srand(time(NULL)); // seed randomness
     int day_counter = 1;
-    int regions_amount = 5;
-    Disease disease;
+    Disease disease; // if pointer decay issues come up allocate dynamically to solve
     World world; // if pointer decay issues come up allocate dynamically to solve
-    Regions* world_regions = AllocateRegions(regions_amount);
-    if (!world_regions) {
-        printf("world regions allocation failed");
-        return;
-    }
-    //print_disease(&disease);
-    //print_region(&world_regions);
+    Regions* world_regions = AllocateRegions(region_amount); //creates region list
+
     FILE* Region_Data = OpenRegionData();
+
     GetRegionInfo(Region_Data, world_regions);
 
     SetUpWorld(&world, world_regions);
@@ -28,4 +23,6 @@ void main() {
         DayLoop(current_region, &disease, &world, day_counter);
         day_counter++;
     }
+
+    CloseRegionDataFile(Region_Data);
 }
