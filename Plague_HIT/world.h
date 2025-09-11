@@ -2,7 +2,7 @@
 #define World_H
 #include "disease.h"
 
-typedef struct {
+typedef struct Regions {
     char name[50];
     int healthy_people; //set to population 
     int sick_people; // starts at 0

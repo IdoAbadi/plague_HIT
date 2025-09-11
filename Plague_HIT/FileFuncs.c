@@ -5,10 +5,10 @@
 #include "world.h"
 
 FILE* OpenRegionData() {
-	FILE* RegionData = fopen("RegionsData", 'r');
+	FILE* RegionData = fopen("RegionsData", "r");
 	if (!RegionData) {
 		printf("file didnt open, you may pnic now");
-		return;
+		return NULL;
 	}
 	return RegionData;
 }
@@ -39,8 +39,7 @@ Regions* AllocateRegions(int regions_amount) {
 void GetRegionInfo(FILE* RegionData, Regions* region) {
 	char buffer[SIZE];
 	if (fgets(buffer, SIZE, RegionData)) {// read name
-		strncpy(region->name, buffer, sizeof(region->name));
-		region->name[sizeof(region->name) - 1] = '\0'; // ensure null-termination
+		strncpy_s(region->name, sizeof(region->name), buffer, _TRUNCATE);
 	}
 	region->name[strcspn(region->name, "\r\n")] = 0; // strips new line character
 	if (fgets(buffer, SIZE, RegionData)) {// read healthy people
@@ -74,5 +73,14 @@ void SetRegionsParams(Regions* start_region, FILE* Region_Data) {
 		GetRegionInfo(Region_Data, curr_region);
 		curr_region = next_region;
 		next_region = curr_region->next_region;
+	}
+}
+
+void freeRegions(Regions* world_regions) {
+	Regions* temp;
+	while (world_regions != NULL) {
+		temp = world_regions;  
+		world_regions = world_regions->next_region;
+		free(temp); 
 	}
 }
