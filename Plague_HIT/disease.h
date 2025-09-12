@@ -15,6 +15,7 @@ int HowContaigous(int tmp);
 int HowSevere(int tmp);
 int HowLeathal(int tmp);
 
+void SetDiseaseOrigin(const Regions* world_regions, char chosen_region[50]);
 void mutate_lethality(Disease* disease);
 void mutate_infectiousness(Disease* disease);
 void mutate_severity(Disease* disease);

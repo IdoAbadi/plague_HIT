@@ -69,12 +69,10 @@ void GetRegionInfo(FILE* RegionData, Regions* region) {
 
 void SetRegionsParams(Regions* start_region, FILE* Region_Data) {
 	Regions* curr_region = start_region;
-	//Regions* next_region = curr_region->next_region;
 	while (curr_region)
 	{
 		GetRegionInfo(Region_Data, curr_region);
 		curr_region = curr_region->next_region;
-		//next_region = curr_region->next_region;
 	}
 }
 

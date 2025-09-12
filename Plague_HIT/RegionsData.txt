@@ -1,35 +1,67 @@
 United States & Canada
-370000000
+387000000
 0
 0
 0
 85
 9
 4
-Latin America & Caribbean
-660000000
+Latin America
+439000000
 0
 0
 0
 30
 7
 6
+Central America
+184000000
+0
+0
+0
+35
+6
+7
+Caribbean
+45000000
+0
+0
+0
+40
+7
+8
 Western Europe
-420000000
+360000000
 0
 0
 0
 80
 10
 6
+United Kingdom
+70000000
+0
+0
+0
+85
+10
+6
 Eastern Europe
-260000000
+120000000
 0
 0
 0
-50
+55
 7
 4
+Russia
+145000000
+0
+0
+0
+60
+7
+2
 North Africa
 260000000
 0
@@ -39,7 +71,7 @@ North Africa
 6
 4
 Sub-Saharan Africa
-1140000000
+1150000000
 0
 0
 0
@@ -55,21 +87,37 @@ Middle East
 7
 4
 South Asia
-1900000000
+500000000
 0
 0
 0
 20
 6
 9
-China & Mongolia
+India
+1430000000
+0
+0
+0
+30
+7
+9
+China
 1410000000
 0
 0
 0
-60
+65
 8
 7
+Hong Kong and Macau
+8000000
+0
+0
+0
+90
+9
+10
 Japan, Korea, and Taiwan
 225000000
 0
@@ -86,7 +134,7 @@ Southeast Asia
 35
 7
 8
-Oceania 
+Small Pacific nations
 13000000
 0
 0
@@ -111,10 +159,10 @@ New Zealand
 9
 3
 Central Asia
-120000000
+100000000
 0
 0
 0
-20
+25
 6
 3
