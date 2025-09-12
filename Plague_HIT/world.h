@@ -39,6 +39,7 @@ void IsCureReached(World* world);
 void public_opinion_escalate(Regions* region, Disease* disease);
 void public_opinion_mitigate(Regions* region, Disease* disease);
 void public_opinion(Regions* region, Disease* disease);
+void print_infected_regions(Regions* world_regions);
 
 #endif
 #pragma once
