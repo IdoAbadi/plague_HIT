@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "disease.h"
+#include "world.h"
 
 #pragma warning(disable:6031) // gets rid of warning to check if scanf_s was succesful
 
@@ -160,6 +161,20 @@ void plague_mutation(Disease* disease) {
     }
 }
 
+void SelectDiseaseOrigin() {
+
+}
+
+void SetDiseaseOrigin(const Regions* world_regions, char chosen_region[50]) {
+    Regions* curr_region = world_regions;
+    while (curr_region) {
+        if (curr_region->name == chosen_region) {
+            curr_region->sick_people = 100;
+            break;
+        }
+        curr_region = curr_region->next_region;
+    }
+}
 
 void clean_input_buffer() {
     int c;

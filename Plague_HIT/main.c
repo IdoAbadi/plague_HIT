@@ -6,6 +6,7 @@
 #include "FileFuncs.h"
 
 void main() {
+    char chosen_region[50];
     int regions_to_aloocate = region_amount;
     srand(time(NULL)); // seed randomness
     int day_counter = 1;

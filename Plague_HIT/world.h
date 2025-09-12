@@ -23,6 +23,7 @@ typedef struct {
 	int vaccine_progress;// 0-1000
 } World;
 
+
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter);
 void print_World(const World* world);
 void print_region(const Regions* region);
