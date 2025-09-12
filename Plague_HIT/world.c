@@ -146,3 +146,14 @@ void public_opinion(Regions* region, Disease* disease) {
 		public_opinion_mitigate(region, disease);
 	}
 }
+
+void print_infected_regions(Regions* world_regions) {
+	Regions* current_region = world_regions;
+	printf("Infected Regions:\n");
+	while (current_region) {
+		if (current_region->sick_people > 0) {
+			printf("%s\n", current_region->name);
+		}
+		current_region = current_region->next_region;
+	}
+}
