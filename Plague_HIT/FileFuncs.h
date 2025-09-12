@@ -3,7 +3,7 @@
 #include "world.h"
 #include "disease.h"
 
-#define region_amount 20
+#define region_amount 21
 #define SIZE 256
 
 void GetRegionInfo(FILE* RegionData, Regions* region);
