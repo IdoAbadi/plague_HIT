@@ -5,11 +5,12 @@
 #include "world.h"
 
 FILE* OpenRegionData() {
-	FILE* RegionData = fopen("RegionsData", "r");
+	FILE* RegionData = fopen("RegionsData.txt", "r");
 	if (!RegionData) {
-		printf("file didnt open, you may pnic now");
+		printf("file didnt open, you may panic now");
 		return NULL;
 	}
+	//printf("opened succesfuly");
 	return RegionData;
 }
 
@@ -33,6 +34,7 @@ Regions* AllocateRegions(int regions_amount) {
 		curr_region->next_region = new_region;
 		curr_region = new_region;
 	}
+	curr_region->next_region = NULL;//sets list end to NULL
 	return start_region;
 }
 
@@ -67,12 +69,12 @@ void GetRegionInfo(FILE* RegionData, Regions* region) {
 
 void SetRegionsParams(Regions* start_region, FILE* Region_Data) {
 	Regions* curr_region = start_region;
-	Regions* next_region = curr_region->next_region;
+	//Regions* next_region = curr_region->next_region;
 	while (curr_region)
 	{
 		GetRegionInfo(Region_Data, curr_region);
-		curr_region = next_region;
-		next_region = curr_region->next_region;
+		curr_region = curr_region->next_region;
+		//next_region = curr_region->next_region;
 	}
 }
 

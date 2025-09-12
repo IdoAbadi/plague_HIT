@@ -14,17 +14,17 @@ void print_region(const Regions* region) {
 }
 
 void print_World(const World* world) {
-	printf("Healthy People: %d\n", world->healthy_people);
-	printf("Sick People: %d\n", world->sick_people);
-	printf("Dead People: %d\n", world->dead_people);
+	printf("Healthy People: %lld\n", world->healthy_people);
+	printf("Sick People: %lld\n", world->sick_people);
+	printf("Dead People: %lld\n", world->dead_people);
 }
 
 void SetUpWorld(World* world ,const Regions* world_regions) {
 	Regions* current_region = world_regions;
-	world->disease_cured = 0;
-	world->disease_detected = 0;
+	int count = 0;
 	while (current_region)
 	{
+		count++;
 		world->healthy_people += current_region->healthy_people;
 		world->sick_people += current_region->sick_people;
 		current_region = current_region->next_region; // moves to next item
