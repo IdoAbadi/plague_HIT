@@ -14,10 +14,10 @@ void print_disease(const Disease* disease) {
 	printf("Lethality: %d\n", disease->lethality);
 }
 
-int Infect(int infectiousness, int infected, int healthy) { // add population density to infect calculation
+long long Infect(long long infectiousness, long long infected, long long healthy) { // add population density to infect calculation
     double expected = (infectiousness / 100.0) * infected;// scale infections by infectiousness
     int variation = rand() % (infected + 1); // random 0..infected
-    int new_infected = (int)(expected * 0.7 + variation * 0.3);
+    long long new_infected = (int)(expected * 0.7 + variation * 0.3);
 
     // cap at healthy population
     if (new_infected > healthy) {
@@ -26,10 +26,10 @@ int Infect(int infectiousness, int infected, int healthy) { // add population de
     return new_infected;
 }
 
-int Kill(int infected, int leathality) {
+long long Kill(long long infected, int leathality) {
     double expected = (leathality / 100.0) * infected;// scale deaths by leathality
     int variation = rand() % (infected + 1); // random 0..infected
-    int to_die = (int)(expected * 0.7 + variation * 0.3);
+    long long to_die = (int)(expected * 0.7 + variation * 0.3);
 
     if (infected > 100) {
         if (to_die > infected / 3) {
@@ -43,7 +43,7 @@ int Kill(int infected, int leathality) {
 }
 
 int Cure() {
-
+    return 0;
 }
 
 void SetUpDisease(Disease* disease) {
@@ -64,7 +64,7 @@ int HowContaigous(int tmp) {
     }
     else {
         printf("invalid value.\n");
-        HowContaigous(tmp);
+        return HowContaigous(tmp);
     }
 }
 
@@ -77,7 +77,7 @@ int HowSevere(int tmp) {
     }
     else {
         printf("invalid value.\n");
-        HowSevere(tmp);
+        return HowSevere(tmp);
     }
 }
 
@@ -90,7 +90,7 @@ int HowLeathal(int tmp) {
     }
     else {
         printf("invalid value.\n");
-        HowLeathal(tmp);
+        return HowLeathal(tmp);
     }
 }
 
@@ -176,75 +176,7 @@ int ChooseContinent() {
     }
     else {
         printf("invalid choice, try again\n");
-        ChooseContinent();
-    }
-}
-
-void SelectDiseaseOrigin(Regions* world_regions,int continent) {// not complete
-    int region = 0;
-    char region_name[50];
-    switch (continent)
-    {
-    case 1:
-        printf("Choose a region:\n");
-        printf("1) United States & Canada \n2) Latin America \n3) Central America\n");
-        scanf("%d", &region);
-        if (region = 1) {
-            strcpy(region_name,"United States & Canada");
-            SetDiseaseOrigin(world_regions, region_name);
-
-        }
-    case 2:
-        printf("Choose a region:\n");
-        printf("1) Western Europe \n2) Eastern Europe \n3) United Kingdom\n");
-        scanf("%d", &region);
-        if (region = 1) {
-            //function that returns a specific region by name
-        }
-    case 3:
-        printf("Choose a region:\n");
-        printf("1) North Africa \n2) Sub-Saharan Africa \n");
-        scanf("%d", &region);
-        if (region = 1) {
-            //function that returns a specific region by name
-        }
-    case 4:
-        printf("Choose a region:\n");
-        printf("1) Russia \n2) Middle East \n3) South Asia \n4) India \n5) China \n6) Hong Kong and Macau \n7) Central Asia \n8) Southeast Asia\n");
-        scanf("%d", &region);
-        if (region = 1) {
-            //function that returns a specific region by name
-        }
-    case 5:
-        printf("Choose a region:\n");
-        printf("1) Australia \n2) New Zealand \n3) Small Pacific nations\n");
-        scanf("%d", &region);
-        if (region = 1) {
-            //function that returns a specific region by name
-        }
-    case 6:
-        printf("Choose a region:\n");
-        printf("1) Japan, Korea, and Taiwan \n2) ECaribbean \n");
-        scanf("%d", &region);
-        if (region = 1) {
-            //function that returns a specific region by name
-        }
-
-    default:
-        printf("invalid choice, try again\n");
-        SelectDiseaseOrigin(world_regions, continent);
-        break;
-    }
-}
-
-void SetDiseaseOrigin(const Regions* world_regions, char chosen_region[50]) {
-    Regions* curr_region = world_regions;
-    while (curr_region) {
-        if (curr_region->name == chosen_region) {
-            curr_region->sick_people = 100;
-            break;
-        }
-        curr_region = curr_region->next_region;
+        return ChooseContinent();
     }
 }
 

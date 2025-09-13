@@ -1,5 +1,6 @@
-#ifndef World_H
-#define World_H
+#ifndef WORLD_H
+#define WORLD_H
+
 #include "disease.h"
 
 typedef struct Regions {
@@ -14,19 +15,19 @@ typedef struct Regions {
     struct Regions* next_region;
 } Regions;
 
-typedef struct {
+typedef struct World {
     int disease_detected;// 0-1
     int disease_cured;// 0-1
     long long healthy_people;// long long is a 64 bit number neccesary to represent a world population of 8 bilion
     long long sick_people;
     long long dead_people;
-	int vaccine_progress;// 0-1000
+    int vaccine_progress;// 0-1000
 } World;
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter);
 void print_World(const World* world);
 void print_region(const Regions* region);
-void SetUpWorld(World* world, const Regions* world_regions);
+void SetUpWorld(World* world, Regions* world_regions);
 void ClosingBorders(Regions* region, Disease* disease);
 void Curfew(Regions* region, Disease* disease);
 void InvestInResearch(Regions* region, World* world);
@@ -40,5 +41,7 @@ void public_opinion_mitigate(Regions* region, Disease* disease);
 void public_opinion(Regions* region, Disease* disease);
 void print_infected_regions(Regions* world_regions);
 
+void StartDisease(Regions* world_regions, char chosen_region[50]);
+void SelectDiseaseOrigin(Regions* world_regions, int continent);
+
 #endif
-#pragma once
