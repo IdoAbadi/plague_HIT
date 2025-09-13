@@ -65,8 +65,12 @@ void ChooseEvent(Regions* current_region, Disease* disease, World* world) { // n
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter) {
 	while (current_region) {
 		//do actions on regions
-		Infect(disease->infectiousness, current_region->sick_people, world->healthy_people);
-		Kill(current_region->sick_people, disease->lethality);
+		int new_infected = Infect(disease->infectiousness, current_region->sick_people, world->healthy_people);
+        current_region->healthy_people -= new_infected;
+        current_region->sick_people += new_infected;
+		int new_deceased = Kill(current_region->sick_people, disease->lethality);
+        current_region->sick_people -= new_deceased;
+        current_region->dead_people += new_deceased;
 		if (day_counter % 7 == 0) { // event can happen once a week
 			ChooseEvent(current_region, disease, world);
 		}
@@ -163,7 +167,8 @@ void print_infected_regions(Regions* world_regions) {
 void StartDisease(Regions* world_regions, char chosen_region[50]) {
 	Regions* curr_region = world_regions;
 	while (curr_region) {
-		if (curr_region->name == chosen_region) {
+        if (strcmp(curr_region->name, chosen_region) == 0) {
+            curr_region->healthy_people -= 100;
 			curr_region->sick_people = 100;
 			break;
 		}
