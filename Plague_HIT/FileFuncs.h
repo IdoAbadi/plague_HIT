@@ -1,7 +1,5 @@
 #ifndef FileFuncs_H
 #define FileFuncs_H
-#include "world.h"
-#include "disease.h"
 
 #define region_amount 21
 #define SIZE 256
