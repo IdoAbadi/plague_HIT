@@ -1,5 +1,8 @@
-#ifndef FileFuncs_H
-#define FileFuncs_H
+#ifndef FILEFUNCS_H
+#define FILEFUNCS_H
+
+#include <stdio.h>
+#include "world.h"
 
 #define region_amount 21
 #define SIZE 256
@@ -14,4 +17,3 @@ Regions* AllocateRegions(int regions_amount);
 FILE* OpenRegionData();
 
 #endif
-#pragma once

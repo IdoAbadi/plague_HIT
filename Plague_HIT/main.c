@@ -8,7 +8,7 @@
 void main() {
     char chosen_region[50];
     int regions_to_aloocate = region_amount;
-    srand(time(NULL)); // seed randomness
+    srand((unsigned int)time(NULL)); // seed randomness
     int day_counter = 1;
     Disease disease; // if pointer decay issues come up allocate dynamically to solve
     World world = {0}; // if pointer decay issues come up allocate dynamically to solve
