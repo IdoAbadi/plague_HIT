@@ -54,17 +54,18 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 	switch (event)
 	{
 	case 0:
-        if (rng < 10) {
-            vaccine_progress_up(world);
-            PrintColored("There have been major breakthrough in vaccine development in ", BLUE);
-            printf("%s. \n", current_region->name);
-
-		}
-		else if(rng > 16){
-            vaccine_progress_down(world);
-            PrintColored("Vaccine progress is going down because of lack of resources in ", BLUE);
-            printf("%s. \n", current_region->name);
-		}
+        if (world->disease_detected == 1) {
+            if (rng < 10) {
+                vaccine_progress_up(world);
+                PrintColored("There have been major breakthrough in vaccine development in ", BLUE);
+                printf("%s. \n", current_region->name);
+            }
+            else if (rng > 16) {
+                vaccine_progress_down(world);
+                PrintColored("Vaccine progress is going down because of lack of resources in ", BLUE);
+                printf("%s. \n", current_region->name);
+            }
+        }
         else {
             printf("No event this week in %s.\n", current_region->name);
         }
@@ -73,7 +74,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (world->vaccine_progress > 500) {
                 if (world->vaccine_progress > 850) {
-                    if (world->vaccine_progress > 999) {
+                    if (world->vaccine_progress > 999) {// becomes more likely as vaccine progresses
                         if (rng > 9) {
                             anti_vaxxers(current_region, disease);
                             PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
@@ -132,7 +133,9 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter, Regions* world_regions) {
     int mutation_enable = 1;
-	while (current_region) {
+    double total_research_progress = 0.0;
+
+    while (current_region) {
 		//do actions on regions
         if (current_region->healthy_people <= 0) {
             current_region->healthy_people = 0;
@@ -151,6 +154,16 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             long long new_deceased = Kill(current_region->sick_people, disease->lethality, current_region->healthy_people, disease->severity);
             current_region->sick_people -= new_deceased;
             current_region->dead_people += new_deceased;
+            if (current_region->sick_people > 0 && world->disease_detected == 0) {
+                DiseaseDetected(current_region, disease, world);
+            }
+
+            // Calculate research progress if disease is detected
+            if (world->disease_detected == 1 && current_region->sick_people > 0) {
+                double region_research = CalculateRegionResearch(current_region, disease);
+                total_research_progress += region_research;
+            }
+            
             if (day_counter % 7 == 0) { // event can happen once a week
                 ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
                 Sleep(1000);
@@ -165,10 +178,24 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
         }
 		current_region = current_region->next_region; // moves to next item
 	}
+
+    // Apply accumulated research progress
+    if (world->disease_detected == 1) {
+        world->vaccine_progress += (int)total_research_progress;
+        if (world->vaccine_progress > 1000) {
+            world->vaccine_progress = 1000;
+        }
+        
+        // Print research progress every week
+        if (day_counter % 7 == 0) {
+            PrintColored("Global Vaccine Research Progress: ", BLUE);
+            printf("%.1f%%\n", (world->vaccine_progress / 10.0));
+        }
+    }
 }
 
-void ClosingBorders(Regions* region, Disease* disease){// might cut
-	disease->infectiousness = (int)(disease->infectiousness * 0.7);
+void ClosingBorders(Regions* region, Disease* disease){// implemented
+	disease->infectiousness = (int)(disease->infectiousness * 0.75);
 	printf("Borders closed in %s.\n", region->name);
 }
 
@@ -185,7 +212,7 @@ void InvestInResearch(Regions* region, World* world) {
 }
 
 void IsCureReached(World* world) {
-	if (world->vaccine_progress >= 1000) {
+	if (world->vaccine_progress >= 10000) {
 		world->disease_cured = 1;
 		printf("Disease cured! Starting vaccine distribution!\n");
 	}
@@ -489,4 +516,80 @@ void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions) {
     if (population > 0 && (current_region->sick_people > (population / 10))) {
         InfectRandomRegion(world_regions, current_region);
     }
+}
+
+void DiseaseDetected(Regions* region, Disease* disease, World* world) {
+    if (world->disease_detected == 0 && region->dead_people > 100) {
+        double total_population = (double)(region->healthy_people + region->sick_people + region->dead_people);
+        // Calculate % of population infected
+        double infection_rate = (double)region->sick_people / total_population;
+        // Calculate death rate (% of infected who died)
+        double death_rate = 0.0;
+        if (region->sick_people + region->dead_people > 0) {
+            death_rate = (double)region->dead_people / (region->sick_people + region->dead_people);
+        }
+        // Factor in population density for spread risk
+        double spread_risk = infection_rate * (region->population_density / 10.0);
+        // Adjust research investment based on spread risk and death rate
+        if (spread_risk > 0.15 || death_rate > 0.5) {
+            world->disease_detected = 1;
+            PrintColored("URGENT: Highly infectious or lethal disease detected in ", RED);
+            printf("%s!\n", region->name);
+            PrintDetectionLog(infection_rate, death_rate, region);
+        }
+        else if (spread_risk > 0.1 || death_rate > 0.3) {
+            world->disease_detected = 1;
+            PrintColored("WARNING: Disease outbreak detected in ", ORANGE);
+            printf("%s!\n", region->name);
+            PrintDetectionLog(infection_rate, death_rate, region);
+        }
+
+        // If highly dangerous, trigger immediate response
+        if (death_rate > 0.65 || (spread_risk > 0.25 && death_rate > 0.5)) {
+            PrintColored("URGENT: Extremely infectious and lethal disease detected in ", RED);
+            printf("%s!\n", region->name);
+            PrintDetectionLog(infection_rate, death_rate, region);
+            ClosingBorders(region, disease);
+        }
+
+        // Initialize research investment based on development level and severity
+        //region->research_investment = (region->development_level * 10);
+        
+
+    }
+}
+
+void PrintDetectionLog(double infection_rate, double death_rate, Regions* region) {
+    // Print detailed status
+    printf("Initial Analysis:\n");
+    printf("Infection Rate: %.2f%%\n", infection_rate * 100);
+    printf("Death Rate: %.2f%%\n", death_rate * 100);
+    printf("Population Density Risk Factor: %d/10\n", region->population_density);
+    printf("Initial Research Investment: %d\n", region->research_investment);
+
+    //PrintColored("Research begins in ", BLUE);
+    //printf("%s \n", region->name);
+}
+
+// Add this new function to calculate research contribution from a region
+double CalculateRegionResearch(Regions* region, Disease* disease) {
+    double research_power = 0.0;
+    double total_population = (double)(region->healthy_people + region->sick_people + region->dead_people);
+    
+    // Base research from healthy population
+    double healthy_ratio = (double)region->healthy_people / total_population;
+    research_power = healthy_ratio * region->research_resources;
+    
+    // Add research from sick people if disease isn't too severe
+    if (disease->severity < 70 && region->sick_people > 0) {
+        double sick_ratio = (double)region->sick_people / total_population;
+        research_power += (sick_ratio * region->research_resources * 0.5); // Sick people research at 50% efficiency
+    }
+    
+    // Scale by research investment level
+    research_power *= (region->research_investment / 100.0);
+    
+    // A region with 100 research resources should take 2000 days to cure alone
+    // So one day of full research = 0.05% progress (100/2000)
+    return (research_power * 0.05);
 }
