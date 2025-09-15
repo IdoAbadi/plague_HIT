@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "disease.h"
+#include "design.h"
 #include "world.h"
 
 #pragma warning(disable:6031) // gets rid of warning to check if scanf_s was succesful
@@ -50,7 +51,7 @@ int Cure() {
 
 void SetUpDisease(Disease* disease) {
     int tmp = 0;
-    printf("What's the name of your disease?\n");
+    PrintColored("What's the name of your disease?\n", YELLOW);
     scanf("%49s", &disease->name);
     disease->infectiousness = HowContaigous(tmp);
     disease->severity = HowSevere(tmp);
@@ -58,7 +59,7 @@ void SetUpDisease(Disease* disease) {
 }
 
 int HowContaigous(int tmp) {
-    printf("How contagious is the disease? (1-100): \n");
+    PrintColored("How contagious is the disease? (1-100): \n", YELLOW);
     scanf_s("%d", &tmp);
     clean_input_buffer();
     if (tmp > 0 && tmp < 101) {
@@ -71,7 +72,7 @@ int HowContaigous(int tmp) {
 }
 
 int HowSevere(int tmp) {
-    printf("How severe is it? (1-100): \n");
+    PrintColored("How severe is it? (1-100): \n", YELLOW);
     scanf_s("%d", &tmp);
     clean_input_buffer();
     if (tmp > 0 && tmp < 101) {
@@ -84,7 +85,7 @@ int HowSevere(int tmp) {
 }
 
 int HowLeathal(int tmp) {
-    printf("How deadly is it? (1-100): \n");
+    PrintColored("How deadly is it? (1-100): \n", YELLOW);
     scanf_s("%d", &tmp);
     clean_input_buffer();
     if (tmp > 0 && tmp < 101) {
@@ -174,8 +175,8 @@ void plague_mutation(Disease* disease, int* enable) {
 
 int ChooseContinent() {
     int continent_choice = 0;
-    printf("choose a continent for the disease to originate from:\n");
-    printf("1) America \n2) Europe \n3) Africa \n4) Asia \n5) Oceania \n6) Islands\n");
+    PrintColored("\nchoose a continent for the disease to originate from:\n", YELLOW);
+    PrintColored("1) America \n2) Europe \n3) Africa \n4) Asia \n5) Oceania \n6) Islands\n", BLUE);
     scanf("%d", &continent_choice);
     clean_input_buffer();
     if (0 < continent_choice < 7) {

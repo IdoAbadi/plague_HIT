@@ -62,7 +62,8 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 		}
 		else if(rng > 16){
             vaccine_progress_down(world);
-            // need to add message
+            PrintColored("Vaccine progress is going down because of lack of resources in ", BLUE);
+            printf("%s. \n", current_region->name);
 		}
         else {
             printf("No event this week in %s.\n", current_region->name);
@@ -75,19 +76,22 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                     if (world->vaccine_progress > 999) {
                         if (rng > 9) {
                             anti_vaxxers(current_region, disease);
-                            // need to add mesage
+                            PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
+                            printf("%s. \n", current_region->name);
                             break;
                         }
                     }
                     if (rng > 13) {
                         anti_vaxxers(current_region, disease);
-                        // need to add mesage
+                        PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
+                        printf("%s. \n", current_region->name);
                         break;
                     }
                 }
                 if (rng > 16) {
                     anti_vaxxers(current_region, disease);
-                    // need to add mesage
+                    PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
+                    printf("%s. \n", current_region->name);
                     break;
                 }
             }
@@ -100,11 +104,13 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (rng > 13) {
                 public_opinion_escalate(current_region, disease);
-                // need to add mesage
+                PrintColored("Public opinion escalates, increasing the crisis in", BLUE);
+                printf("%s. \n", current_region->name);
             }
             else if (rng < 3) {
                 public_opinion_mitigate(current_region, disease);
-                // need to add mesage
+                PrintColored("Public cooperation helps soften the virus’s impact.", BLUE);
+                printf("%s. \n", current_region->name);
             }
             else {
                 printf("No event this week in %s.\n", current_region->name);
@@ -114,7 +120,8 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
     case 3:
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
-            // need to add mesage inside the function
+            PrintColored("The plague mutates, creating new challenges.", BLUE);
+            printf("%s. \n", current_region->name);
         }
         break;
 	default:
@@ -283,8 +290,8 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
         switch (continent)
         {
         case 1:
-            printf("Choose a region:\n");
-            printf("1) United States & Canada \n2) Latin America \n3) Central America\n");
+            PrintColored("Choose a region:\n", YELLOW);
+            PrintColored("1) United States & Canada \n2) Latin America \n3) Central America\n", BLUE);
             scanf_s("%d", &region);
             if (region == 1) {
                 strcpy_s(region_name, sizeof(region_name), "United States & Canada");
@@ -307,8 +314,8 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
             }
             break;
         case 2:
-            printf("Choose a region:\n");
-            printf("1) Western Europe \n2) Eastern Europe \n3) United Kingdom\n");
+            PrintColored("Choose a region:\n", YELLOW);
+            PrintColored("1) Western Europe \n2) Eastern Europe \n3) United Kingdom\n", BLUE);
             scanf_s("%d", &region);
             if (region == 1) {
                 strcpy_s(region_name, sizeof(region_name), "Western Europe");
@@ -331,8 +338,8 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
             }
             break;
         case 3:
-            printf("Choose a region:\n");
-            printf("1) North Africa \n2) Sub-Saharan Africa \n");
+            PrintColored("Choose a region:\n", YELLOW);
+            PrintColored("1) North Africa \n2) Sub-Saharan Africa \n", BLUE);
             scanf_s("%d", &region);
             if (region == 1) {
                 strcpy_s(region_name, sizeof(region_name), "North Africa");
@@ -350,8 +357,8 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
             }
             break;
         case 4:
-            printf("Choose a region:\n");
-            printf("1) Russia \n2) Middle East \n3) South Asia \n4) India \n5) China \n6) Hong Kong and Macau \n7) Central Asia \n8) Southeast Asia\n");
+            PrintColored("Choose a region:\n", YELLOW);
+            PrintColored("1) Russia \n2) Middle East \n3) South Asia \n4) India \n5) China \n6) Hong Kong and Macau \n7) Central Asia \n8) Southeast Asia\n", BLUE);
             scanf_s("%d", &region);
             if (region == 1) {
                 strcpy_s(region_name, sizeof(region_name), "Russia");
@@ -399,8 +406,8 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
             }
             break;
         case 5:
-            printf("Choose a region:\n");
-            printf("1) Australia \n2) New Zealand \n3) Small Pacific nations\n");
+            PrintColored("Choose a region:\n", YELLOW);
+            PrintColored("1) Australia \n2) New Zealand \n3) Small Pacific nations\n", BLUE);
             scanf_s("%d", &region);
             if (region == 1) {
                 strcpy_s(region_name, sizeof(region_name), "Australia");
@@ -423,8 +430,8 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
             }
             break;
         case 6:
-            printf("Choose a region:\n");
-            printf("1) Japan, Korea, and Taiwan \n2) Caribbean \n");
+            PrintColored("Choose a region:\n", YELLOW);
+            PrintColored("1) Japan, Korea, and Taiwan \n2) Caribbean \n", BLUE);
             scanf_s("%d", &region);
             if (region == 1) {
                 strcpy_s(region_name, sizeof(region_name), "Japan, Korea, and Taiwan");
