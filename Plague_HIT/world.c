@@ -48,7 +48,7 @@ void UpdateWorld(World* world, Regions* world_regions) {
     }
 }
 
-void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable) { // not finished
+void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable) { 
 	int event = rand() % 6;//number of events +1
     int rng = rand() % 20;
 	switch (event)
@@ -104,12 +104,12 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (rng > 13) {
                 public_opinion_escalate(current_region, disease);
-                PrintColored("Public opinion escalates, increasing the crisis in", BLUE);
+                PrintColored("Public opinion escalates, increasing the crisis in ", BLUE);
                 printf("%s. \n", current_region->name);
             }
             else if (rng < 3) {
                 public_opinion_mitigate(current_region, disease);
-                PrintColored("Public cooperation helps soften the virus’s impact.", BLUE);
+                PrintColored("Public cooperation helps soften the virus’s impact in", BLUE);
                 printf("%s. \n", current_region->name);
             }
             else {
@@ -120,7 +120,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
     case 3:
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
-            PrintColored("The plague mutates, creating new challenges.", BLUE);
+            PrintColored("The plague mutates, creating new challenges in ", BLUE);
             printf("%s. \n", current_region->name);
         }
         break;
