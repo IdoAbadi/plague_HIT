@@ -140,9 +140,8 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 }
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter, Regions* world_regions) {
-    int mutation_enable = 1;
+    printf("%d\n", day_counter);// for debuging
     double total_research_progress = 0.0;
-
     while (current_region) {
 		//do actions on regions
         if (current_region->healthy_people <= 0) {
@@ -165,20 +164,10 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             if (current_region->sick_people > 0 && world->disease_detected == 0) {
                 DiseaseDetected(current_region, disease, world, world_regions);
             }
-
             // Calculate research progress if disease is detected
             if (world->disease_detected == 1 && current_region->sick_people > 0) {
                 double region_research = CalculateRegionResearch(current_region, disease);
                 total_research_progress += region_research;
-            }
-            
-            if (day_counter % 7 == 0) { // event can happen once a week
-                ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
-                Sleep(1000);
-            }
-            if (day_counter % 30 == 0) {// special event once a month
-                TriggerInfectOtherRegion(current_region, world_regions);
-                Sleep(1000);
             }
             //Cure()
         }
@@ -191,11 +180,38 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
         if (world->vaccine_progress > 1000) {
             world->vaccine_progress = 1000;
         }
-        
-        // Print research progress every month
-        if (day_counter % 30 == 0) {
-            PrintColored("Global Vaccine Research Progress: ", BLUE);
-            printf("%.1f%%\n", (world->vaccine_progress / 10.0));
+    }
+}
+
+void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* world, int* mutation_enable) {
+    Regions* current_region = world_regions;
+
+    if (day_counter % 7 == 0) { // event can happen once a week
+        int week_num = day_counter / 7;
+        PrintColored("week ", ORANGE);
+        printf("%d:\n", week_num);
+        while (current_region) {
+            if (current_region->sick_people > 0) {
+                ChooseSimpleEvent(current_region, disease, world, mutation_enable);
+                Sleep(500);
+            }
+            current_region = current_region->next_region;
+        }
+    }
+}
+
+void MonthLog(int day_counter, World* world, Regions* world_regions) {
+    if (day_counter % 30 == 0) {
+        Regions* current_region = world_regions;
+        print_World(world);
+        PrintColored("Global Vaccine Research Progress: ", BLUE);
+        printf("%.1f%%\n", (world->vaccine_progress / 10.0));
+        while (current_region) {
+            if (current_region->sick_people > 0) {
+                TriggerInfectOtherRegion(current_region, world_regions);
+                Sleep(1000);
+            }
+            current_region = current_region->next_region;
         }
     }
 }
@@ -597,4 +613,15 @@ double CalculateRegionResearch(Regions* region, Disease* disease) {
     // A region with 100 research resources should take 2000 days to cure alone
     // So one day of full research = 0.05% progress (100/2000)
     return (research_power * 0.05);
+}
+
+void SetUpInvestment(World* world, Regions* world_regions) {
+    if (world->disease_detected == 1) {
+        // Initialize all regions' research investment when disease is first detected
+        Regions* curr = world_regions;
+        while (curr) {
+            curr->research_investment = curr->development_level * 10;
+            curr = curr->next_region;
+        }
+    }
 }
