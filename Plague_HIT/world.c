@@ -155,7 +155,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             current_region->sick_people -= new_deceased;
             current_region->dead_people += new_deceased;
             if (current_region->sick_people > 0 && world->disease_detected == 0) {
-                DiseaseDetected(current_region, disease, world);
+                DiseaseDetected(current_region, disease, world, world_regions);
             }
 
             // Calculate research progress if disease is detected
@@ -171,8 +171,6 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             if (day_counter % 30 == 0) {// special event once a month
                 TriggerInfectOtherRegion(current_region, world_regions);
                 Sleep(1000);
-                print_World(world);
-                Sleep(1000);
             }
             //Cure()
         }
@@ -186,8 +184,8 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             world->vaccine_progress = 1000;
         }
         
-        // Print research progress every week
-        if (day_counter % 7 == 0) {
+        // Print research progress every month
+        if (day_counter % 30 == 0) {
             PrintColored("Global Vaccine Research Progress: ", BLUE);
             printf("%.1f%%\n", (world->vaccine_progress / 10.0));
         }
@@ -518,7 +516,7 @@ void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions) {
     }
 }
 
-void DiseaseDetected(Regions* region, Disease* disease, World* world) {
+void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* world_regions) {
     if (world->disease_detected == 0 && region->dead_people > 100) {
         double total_population = (double)(region->healthy_people + region->sick_people + region->dead_people);
         // Calculate % of population infected
@@ -552,10 +550,14 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world) {
             ClosingBorders(region, disease);
         }
 
-        // Initialize research investment based on development level and severity
-        //region->research_investment = (region->development_level * 10);
-        
-
+        if (world->disease_detected == 1) {
+            // Initialize all regions' research investment when disease is first detected
+            Regions* curr = world_regions;  // Need to add world_regions parameter
+            while (curr) {
+                curr->research_investment = curr->development_level * 10;
+                curr = curr->next_region;
+            }
+        }
     }
 }
 

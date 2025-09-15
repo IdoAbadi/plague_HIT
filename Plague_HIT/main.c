@@ -32,6 +32,9 @@ void main() {
         }
         UpdateWorld(&world, world_regions);
         DayLoop(current_region, &disease, &world, day_counter, current_region);
+        if (day_counter % 30 == 0) {
+            print_World(&world);
+        }
         day_counter++;
     }
 
