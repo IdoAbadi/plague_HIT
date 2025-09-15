@@ -21,7 +21,7 @@ typedef struct World {
     long long healthy_people;// long long is a 64 bit number neccesary to represent a world population of 8 bilion
     long long sick_people;
     long long dead_people;
-    int vaccine_progress;// 0-1000
+    double vaccine_progress;// 0-10000
 } World;
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter, Regions* world_regions);
@@ -41,10 +41,13 @@ void public_opinion_mitigate(Regions* region, Disease* disease);// implemented
 void public_opinion(Regions* region, Disease* disease);
 void print_infected_regions(Regions* world_regions);
 void UpdateWorld(World* world, Regions* world_regions);
-
+void DiseaseDetected(Regions* region, Disease* disease, World* world);
 void StartDisease(Regions* world_regions, char chosen_region[50]);
 void SelectDiseaseOrigin(Regions* world_regions, int continent);
 void InfectRandomRegion(Regions* world_regions, Regions* exclude_region);
 void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions);
+void PrintDetectionLog(double infection_rate, double death_rate, Regions* region);
+
+double CalculateRegionResearch(struct Regions* region, struct Disease* disease);
 
 #endif
