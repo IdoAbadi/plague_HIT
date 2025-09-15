@@ -3,6 +3,7 @@
 #include <string.h>
 #include "FileFuncs.h"
 #include "world.h"
+#include "disease.h"
 
 FILE* OpenRegionData() {
 	FILE* RegionData = fopen("RegionsData.txt", "r");

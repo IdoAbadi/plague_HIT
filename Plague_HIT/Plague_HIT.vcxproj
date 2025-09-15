@@ -127,16 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="design.c" />
     <ClCompile Include="disease.c" />
     <ClCompile Include="FileFuncs.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="matrix.c" />
+    <ClCompile Include="sort.c" />
     <ClCompile Include="world.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="design.h" />
     <ClInclude Include="disease.h" />
     <ClInclude Include="FileFuncs.h" />
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="sort.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <ItemGroup>
