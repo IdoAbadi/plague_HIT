@@ -32,6 +32,14 @@ void main() {
         }
         UpdateWorld(&world, world_regions);
         DayLoop(current_region, &disease, &world, day_counter, current_region);
+        if (world.disease_detected == 1) {
+            // Initialize all regions' research investment when disease is first detected
+            Regions* curr = world_regions;
+            while (curr) {
+                curr->research_investment = curr->development_level * 10;
+                curr = curr->next_region;
+            }
+        }
         if (day_counter % 30 == 0) {
             print_World(&world);
         }

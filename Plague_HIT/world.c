@@ -38,14 +38,17 @@ void SetUpWorld(World* world , Regions* world_regions) {
 
 void UpdateWorld(World* world, Regions* world_regions) {
     Regions* current_region = world_regions;
-    int count = 0;
+    // Reset totals before summing
+    world->healthy_people = 0;
+    world->sick_people = 0;
+    world->dead_people = 0;
+    
     while (current_region)
     {
-        count++;
         world->healthy_people += current_region->healthy_people;
         world->sick_people += current_region->sick_people;
         world->dead_people += current_region->dead_people;
-        current_region = current_region->next_region; // moves to next item
+        current_region = current_region->next_region;
     }
 }
 
@@ -554,15 +557,6 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
             printf("%s!\n", region->name);
             PrintDetectionLog(infection_rate, death_rate, region);
             ClosingBorders(region, disease);
-        }
-
-        if (world->disease_detected == 1) {
-            // Initialize all regions' research investment when disease is first detected
-            Regions* curr = world_regions;  // Need to add world_regions parameter
-            while (curr) {
-                curr->research_investment = curr->development_level * 10;
-                curr = curr->next_region;
-            }
         }
     }
 }
