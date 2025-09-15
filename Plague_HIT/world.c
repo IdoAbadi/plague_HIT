@@ -18,7 +18,7 @@ void print_region(const Regions* region) {
 }
 
 void print_World(const World* world) {
-	PrintColored("World Status:\n", BLUE);
+	PrintColored("World Status:\n", PURPLE);
 	printf("Healthy People: %lld\n", world->healthy_people);
 	printf("Sick People: %lld\n", world->sick_people);
 	printf("Dead People: %lld\n", world->dead_people);
@@ -71,7 +71,8 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
             }
         }
         else {
-            printf("No event this week in %s.\n", current_region->name);
+            PrintColored("No event this week in ", CYAN);
+            printf("%s.\n", current_region->name);
         }
 		break;
 	case 1:
@@ -102,7 +103,8 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
             }
         }
 		else {
-			printf("No event this week in %s.\n", current_region->name);
+            PrintColored("No event this week in ", CYAN);
+            printf("%s.\n", current_region->name);
 		}
 		break;
 	case 2:
@@ -114,11 +116,12 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
             }
             else if (rng < 3) {
                 public_opinion_mitigate(current_region, disease);
-                PrintColored("Public cooperation helps soften the virus’s impact in", BLUE);
+                PrintColored("Public cooperation helps soften the virus impact in ", BLUE);
                 printf("%s. \n", current_region->name);
             }
             else {
-                printf("No event this week in %s.\n", current_region->name);
+                PrintColored("No event this week in ", CYAN);
+                printf("%s.\n", current_region->name);
             }
         }
 		break;
@@ -130,7 +133,8 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         }
         break;
 	default:
-		printf("No event this week in %s.\n", current_region->name);
+        PrintColored("No event this week in ", CYAN);
+        printf("%s.\n", current_region->name);
 		break;
 	}
 }
@@ -254,7 +258,7 @@ void vaccine_progress_down(World* world) { // implemented
 	}
     else {
         world->vaccine_progress -= 30; // decrease vaccine progress
-        PrintColored("Vaccine progress decreased.\n", ORANGE);
+        PrintColored("Vaccine progress decreased.\n", YELLOW);
         if (world->vaccine_progress < 1) {
             world->vaccine_progress = 1; // cap at 1
             return;
