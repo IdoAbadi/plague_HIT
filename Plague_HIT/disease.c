@@ -32,8 +32,8 @@ long long Kill(long long infected, int leathality) {
     long long to_die = (int)(expected * 0.7 + variation * 0.3);
 
     if (infected > 100) {
-        if (to_die > infected / 3) {
-            return infected / 3;
+        if (to_die > infected / 4) {
+            return infected / 4;
         }
         else {
             return to_die;
@@ -152,22 +152,27 @@ void mutate_lethality(Disease* disease) {
     }
 }
 
-void plague_mutation(Disease* disease) {
-    int param = rand() % 3; // Randomly choose which parameter to mutate
-    if (param == 0) {
-        mutate_infectiousness(disease);
-    }
-    else if (param == 1) {
-        mutate_severity(disease);
-    }
-    else { 
-        mutate_lethality(disease);
+void plague_mutation(Disease* disease, int* enable) {
+    if (enable != NULL && *enable == 1) {
+        int param = rand() % 3; // Randomly choose which parameter to mutate
+        if (param == 0) {
+            mutate_infectiousness(disease);
+            *enable = 0;
+        }
+        else if (param == 1) {
+            mutate_severity(disease);
+            *enable = 0;
+        }
+        else {
+            mutate_lethality(disease);
+            *enable = 0;
+        }
     }
 }
 
 int ChooseContinent() {
     int continent_choice = 0;
-    printf("choose a continent for the disease to originate from:");
+    printf("choose a continent for the disease to originate from:\n");
     printf("1) America \n2) Europe \n3) Africa \n4) Asia \n5) Oceania \n6) Islands\n");
     scanf("%d", &continent_choice);
     clean_input_buffer();

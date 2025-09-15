@@ -21,7 +21,7 @@ void main() {
     while (world.sick_people != 0 && world.healthy_people != 0 || world.disease_cured == 0)
     {
         Regions* current_region = world_regions; // precaution to not run up loop
-        DayLoop(current_region, &disease, &world, day_counter);
+        DayLoop(current_region, &disease, &world, day_counter, current_region);
         day_counter++;
     }
 

@@ -7,9 +7,9 @@
 void print_region(const Regions* region) {
 	printf("%s\n", region->name);
 	printf("Region Status:\n");
-	printf("Healthy People: %d\n", region->healthy_people);
-	printf("Sick People: %d\n", region->sick_people);
-	printf("Dead People: %d\n", region->dead_people);
+	printf("Healthy People: %lld\n", region->healthy_people);
+	printf("Sick People: %lld\n", region->sick_people);
+	printf("Dead People: %lld\n", region->dead_people);
 	printf("Research Investment: %d\n", region->research_investment);
 	printf("Development Level: %d\n", region->development_level);
 	printf("Population Density: %d\n", region->population_density);
@@ -33,58 +33,112 @@ void SetUpWorld(World* world , Regions* world_regions) {
 	}
 }
 
-void ChooseEvent(Regions* current_region, Disease* disease, World* world) { // not finished
+void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable) { // not finished
 	int event = rand() % 6;//number of events +1
+    int rng = rand() % 20;
 	switch (event)
 	{
 	case 0:
-		if (world->disease_detected == 1) {
-			ClosingBorders(current_region, disease);
+        if (rng < 10) {
+            vaccine_progress_up(world);
+
 		}
-		else {
-			printf("No event this week in %s.\n", current_region->name);
+		else if(rng > 16){
+            vaccine_progress_down(world);
 		}
+        else {
+            printf("No event this week in %s.\n", current_region->name);
+        }
 		break;
 	case 1:
-		if (world->disease_detected == 1) {
-			Curfew(current_region, disease);
-		}
+        if (world->disease_detected == 1) {
+            if (world->vaccine_progress > 500) {
+                if (world->vaccine_progress > 850) {
+                    if (world->vaccine_progress > 999) {
+                        if (rng > 9) {
+                            anti_vaxxers(current_region, disease);
+                            break;
+                        }
+                    }
+                    if (rng > 13) {
+                        anti_vaxxers(current_region, disease);
+                        break;
+                    }
+                }
+                if (rng > 16) {
+                    anti_vaxxers(current_region, disease);
+                    break;
+                }
+            }
+        }
 		else {
 			printf("No event this week in %s.\n", current_region->name);
 		}
 		break;
 	case 2:
-		//something
+        if (world->disease_detected == 1) {
+            if (rng > 13) {
+                public_opinion_escalate(current_region, disease);
+            }
+            else if (rng < 3) {
+                public_opinion_mitigate(current_region, disease);
+            }
+            else {
+                printf("No event this week in %s.\n", current_region->name);
+            }
+        }
 		break;
+    case 3:
+        if (rng < 13) {
+            plague_mutation(disease, mutation_enable);
+        }
 	default:
 		printf("No event this week in %s.\n", current_region->name);
 		break;
 	}
 }
 
-void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter) {
+void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter, Regions* world_regions) {
+    int mutation_enable = 1;
 	while (current_region) {
 		//do actions on regions
-		int new_infected = Infect(disease->infectiousness, current_region->sick_people, world->healthy_people);
-        current_region->healthy_people -= new_infected;
-        current_region->sick_people += new_infected;
-		int new_deceased = Kill(current_region->sick_people, disease->lethality);
-        current_region->sick_people -= new_deceased;
-        current_region->dead_people += new_deceased;
-		if (day_counter % 7 == 0) { // event can happen once a week
-			ChooseEvent(current_region, disease, world);
-		}
-		//Cure()
+        if (current_region->healthy_people <= 0) {
+            current_region->healthy_people = 0;
+        }
+        else
+        {
+            long long new_infected = Infect(disease->infectiousness, current_region->sick_people, current_region->healthy_people);
+            current_region->healthy_people -= new_infected;
+            current_region->sick_people += new_infected;
+        }
+
+        if (current_region->sick_people <= 0) {
+            current_region->sick_people = 0;
+        }
+        else {
+            long long new_deceased = Kill(current_region->sick_people, disease->lethality);
+            current_region->sick_people -= new_deceased;
+            current_region->dead_people += new_deceased;
+            if (day_counter % 7 == 0) { // event can happen once a week
+                ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
+            }
+            if (day_counter % 30 == 0) {// special event once a month
+                TriggerInfectOtherRegion(current_region, world_regions);
+
+                print_World(world);
+            }
+            //Cure()
+        }
 		current_region = current_region->next_region; // moves to next item
 	}
 }
 
-void ClosingBorders(Regions* region, Disease* disease){
+void ClosingBorders(Regions* region, Disease* disease){// might cut
 	disease->infectiousness = (int)(disease->infectiousness * 0.7);
 	printf("Borders closed in %s.\n", region->name);
 }
 
-void Curfew(Regions* region, Disease* disease) {
+void Curfew(Regions* region, Disease* disease) {// might cut 
 	disease->infectiousness = (int)(disease->infectiousness * 0.4);
 	printf("Curfew imposed in %s.\n", region->name);
 }
@@ -103,48 +157,66 @@ void IsCureReached(World* world) {
 	}
 }
 
-void anti_vaxxers(Regions* region, Disease* disease) {
-	disease->infectiousness += 5; // increase infectiousness due to anti-vaxxer movement
+void anti_vaxxers(Regions* region, Disease* disease) {// implemented
+	disease->infectiousness += 3; // increase infectiousness due to anti-vaxxer movement
 	if (disease->infectiousness > 100) {
 		return;
 	}
 	printf("Anti-vaxxer movement in %s increased infectiousness.\n", region->name);
 }
 
-void vaccine_progress_up(World* world) {
+void vaccine_progress_up(World* world) { // implemented
 	if (world->disease_detected == 0) {
 		return; // can't progress vaccine if disease not detected
 	}
-	if (world->vaccine_progress > 1000) {
-		return;
-	}
-	world->vaccine_progress += 10; // increase vaccine progress
-	printf("Vaccine progress increased.\n");
+    else {
+        if (world->vaccine_progress > 1000) {
+            return;
+        }
+        else {
+            world->vaccine_progress += 10; // increase vaccine progress
+            printf("Vaccine progress increased.\n");
+        }
+    }
 }
 
-void vaccine_progress_down(World* world) {
+void vaccine_progress_down(World* world) { // implemented
 	if (world->disease_detected == 0) {
 		return; // can't regress vaccine if disease not detected
 	}
-	if (world->vaccine_progress < 1) {
-		world->vaccine_progress = 1; // cap at 1
-		return;
-	}
-	world->vaccine_progress -= 30; // decrease vaccine progress
-	printf("Vaccine progress decreased.\n");
+    else {
+        world->vaccine_progress -= 30; // decrease vaccine progress
+        printf("Vaccine progress decreased.\n");
+        if (world->vaccine_progress < 1) {
+            world->vaccine_progress = 1; // cap at 1
+            return;
+        }
+    }
 }
 
-void public_opinion_escalate(Regions* region, Disease* disease) {
-	disease->infectiousness = (int)(disease->infectiousness * 1.15);
-	printf("Public opinion has increased the infectiousness to %d\n", disease->infectiousness);
+void public_opinion_escalate(Regions* region, Disease* disease) { // implemented
+    if (disease->infectiousness > 40) {
+        disease->infectiousness = (int)(disease->infectiousness * 1.04);
+        printf("Public in %s dont follow regulations\n", region->name);
+    }
+    else {
+        disease->infectiousness = (int)(disease->infectiousness * 1.1);
+        printf("Public in %s dont follow regulations\n", region->name);
+    }
 }
 
-void public_opinion_mitigate(Regions* region, Disease* disease) {
-	disease->infectiousness = (int)(disease->infectiousness * 0.85);
-	printf("Public opinion mitigated the infectiousness to %d", disease->infectiousness);
+void public_opinion_mitigate(Regions* region, Disease* disease) {// implemented
+    if (disease->infectiousness > 40) {
+        disease->infectiousness = (int)(disease->infectiousness * 0.95);
+        printf("Public in %s are following regulations more closely\n", region->name);
+    }
+    else {
+        disease->infectiousness = (int)(disease->infectiousness * 0.85);
+        printf("Public in %s are following regulations more closely\n", region->name);
+    }
 }
 
-void public_opinion(Regions* region, Disease* disease) {
+void public_opinion(Regions* region, Disease* disease) {// might cut
 	if ((rand() % 2) == 0) {
 		public_opinion_escalate(region, disease);
 	}
@@ -350,3 +422,39 @@ void SelectDiseaseOrigin(struct Regions* world_regions, int continent) {
     }
 }
 
+void InfectRandomRegion(Regions* world_regions, Regions* exclude_region) {
+    // Count regions
+    int count = 0;
+    Regions* curr = world_regions;
+    while (curr) {
+        if (curr != exclude_region) count++;
+        curr = curr->next_region;
+    }
+    if (count == 0) return;
+
+    // Pick random region (excluding the current one)
+    int target = rand() % count;
+    curr = world_regions;
+    while (curr) {//run through region list each time reducing target by 1 untill 0
+        if (curr != exclude_region) {
+            if (target == 0) {
+                // Infect this region (e.g., 10 people)
+                if (curr->healthy_people >= 100000) {
+                    curr->healthy_people -= 100;
+                    curr->sick_people += 100;
+                }
+                printf("Random infection event: A flight with an infected person has left %s and arrived at %s .\n", exclude_region , curr->name);
+                break;
+            }
+            target--;
+        }
+        curr = curr->next_region;
+    }
+}
+
+void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions) {
+    long long population = current_region->healthy_people + current_region->sick_people + current_region->dead_people;
+    if (population > 0 && (current_region->sick_people > (population / 10))) {
+        InfectRandomRegion(world_regions, current_region);
+    }
+}
