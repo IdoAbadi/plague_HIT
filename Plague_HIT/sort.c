@@ -60,3 +60,15 @@ void SaveToFile(AffectedRegions* affected_array) {
     }
 	fclose(file);
 }
+
+void AppendToFile(AffectedRegions* affected_array) {
+    FILE* file = fopen("FileFunc.txt", "a");
+    if (file == NULL) {
+        printf("Error opening file for appending.\n");
+        return;
+    }
+    for (int i = 0; i < 21; i++) {
+        fprintf(file, "Region: %s, Affected Percentage: %d%%\n", affected_array->name, affected_array->affected_percentage);
+    }
+    fclose(file);
+}
