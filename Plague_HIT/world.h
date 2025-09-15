@@ -43,5 +43,7 @@ void print_infected_regions(Regions* world_regions);
 
 void StartDisease(Regions* world_regions, char chosen_region[50]);
 void SelectDiseaseOrigin(Regions* world_regions, int continent);
+void InfectRandomRegion(Regions* world_regions, Regions* exclude_region);
+void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions);
 
 #endif

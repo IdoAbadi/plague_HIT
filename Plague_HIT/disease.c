@@ -26,10 +26,12 @@ long long Infect(long long infectiousness, long long infected, long long healthy
     return new_infected;
 }
 
-long long Kill(long long infected, int leathality) {
-    double expected = (leathality / 100.0) * infected;// scale deaths by leathality
-    int variation = rand() % (infected + 1); // random 0..infected
-    long long to_die = (int)(expected * 0.7 + variation * 0.3);
+long long Kill(long long infected, int leathality, long long healthy, int severity) {
+    leathality += (int)(severity / 2);// severity can increse leathality by max of 50
+    double living_population = (double)infected + (double)healthy;
+    double expected = (leathality / 100.0) * infected * (infected / living_population);// scale deaths by leathality
+    double variation = (rand() % (infected + 1)) * ((infected * leathality) / living_population); // random 0..infected
+    long long to_die = (long)(expected * 0.8 + variation * 0.2);
 
     if (infected > 100) {
         if (to_die > infected / 4) {

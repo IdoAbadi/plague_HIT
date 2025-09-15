@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "disease.h"
 #include "world.h"
 
@@ -115,17 +116,19 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
         if (current_region->sick_people <= 0) {
             current_region->sick_people = 0;
         }
-        else {
-            long long new_deceased = Kill(current_region->sick_people, disease->lethality);
+        else {// only enter if country is infected (sick_people > 0)
+            long long new_deceased = Kill(current_region->sick_people, disease->lethality, current_region->healthy_people, disease->severity);
             current_region->sick_people -= new_deceased;
             current_region->dead_people += new_deceased;
             if (day_counter % 7 == 0) { // event can happen once a week
                 ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
+                Sleep(5000);
             }
             if (day_counter % 30 == 0) {// special event once a month
                 TriggerInfectOtherRegion(current_region, world_regions);
-
+                Sleep(3000);
                 print_World(world);
+                Sleep(3000);
             }
             //Cure()
         }
@@ -438,12 +441,10 @@ void InfectRandomRegion(Regions* world_regions, Regions* exclude_region) {
     while (curr) {//run through region list each time reducing target by 1 untill 0
         if (curr != exclude_region) {
             if (target == 0) {
-                // Infect this region (e.g., 10 people)
-                if (curr->healthy_people >= 100000) {
-                    curr->healthy_people -= 100;
-                    curr->sick_people += 100;
-                }
-                printf("Random infection event: A flight with an infected person has left %s and arrived at %s .\n", exclude_region , curr->name);
+                // Infect this region 
+                curr->healthy_people -= 100;
+                curr->sick_people += 100;
+                printf("Random infection event: A flight with an infected person has left %s and arrived at %s .\n", exclude_region->name , curr->name);
                 break;
             }
             target--;
