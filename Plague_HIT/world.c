@@ -18,6 +18,7 @@ void print_region(const Regions* region) {
 }
 
 void print_World(const World* world) {
+	PrintColored("World Status:\n", BLUE);
 	printf("Healthy People: %lld\n", world->healthy_people);
 	printf("Sick People: %lld\n", world->sick_people);
 	printf("Dead People: %lld\n", world->dead_people);
@@ -57,12 +58,12 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (rng < 10) {
                 vaccine_progress_up(world);
-                PrintColored("There have been major breakthrough in vaccine development in ", BLUE);
+                PrintColored("There have been major breakthrough in vaccine development in ", GREEN);
                 printf("%s. \n", current_region->name);
             }
             else if (rng > 16) {
                 vaccine_progress_down(world);
-                PrintColored("Vaccine progress is going down because of lack of resources in ", BLUE);
+                PrintColored("Vaccine progress is going down because of lack of resources in ", ORANGE);
                 printf("%s. \n", current_region->name);
             }
         }
@@ -77,21 +78,21 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                     if (world->vaccine_progress > 999) {// becomes more likely as vaccine progresses
                         if (rng > 9) {
                             anti_vaxxers(current_region, disease);
-                            PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
+                            PrintColored("The anti-vaxxers movement is on the rise in ", RED);
                             printf("%s. \n", current_region->name);
                             break;
                         }
                     }
                     if (rng > 13) {
                         anti_vaxxers(current_region, disease);
-                        PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
+                        PrintColored("The anti-vaxxers movement is on the rise in ", RED);
                         printf("%s. \n", current_region->name);
                         break;
                     }
                 }
                 if (rng > 16) {
                     anti_vaxxers(current_region, disease);
-                    PrintColored("The anti-vaxxers movement is on the rise in ", BLUE);
+                    PrintColored("The anti-vaxxers movement is on the rise in ", RED);
                     printf("%s. \n", current_region->name);
                     break;
                 }
@@ -105,7 +106,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (rng > 13) {
                 public_opinion_escalate(current_region, disease);
-                PrintColored("Public opinion escalates, increasing the crisis in ", BLUE);
+                PrintColored("Public opinion escalates, increasing the crisis in ", ORANGE);
                 printf("%s. \n", current_region->name);
             }
             else if (rng < 3) {
@@ -121,7 +122,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
     case 3:
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
-            PrintColored("The plague mutates, creating new challenges in ", BLUE);
+            PrintColored("The plague mutates, creating new challenges in ", RED);
             printf("%s. \n", current_region->name);
         }
         break;
@@ -194,12 +195,14 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
 
 void ClosingBorders(Regions* region, Disease* disease){// implemented
 	disease->infectiousness = (int)(disease->infectiousness * 0.75);
-	printf("Borders closed in %s.\n", region->name);
+	PrintColored("Borders closed in ", RED);
+    printf("%s\n", region->name);
 }
 
 void Curfew(Regions* region, Disease* disease) {// might cut 
 	disease->infectiousness = (int)(disease->infectiousness * 0.4);
-	printf("Curfew imposed in %s.\n", region->name);
+	PrintColored("Curfew imposed in \n", RED);
+    printf("%s\n", region->name);
 }
 
 void InvestInResearch(Regions* region, World* world) {
@@ -212,7 +215,7 @@ void InvestInResearch(Regions* region, World* world) {
 void IsCureReached(World* world) {
 	if (world->vaccine_progress >= 10000) {
 		world->disease_cured = 1;
-		printf("Disease cured! Starting vaccine distribution!\n");
+		PrintColored("Disease cured! Starting vaccine distribution!\n", GREEN);
 	}
 }
 
@@ -221,8 +224,11 @@ void anti_vaxxers(Regions* region, Disease* disease) {// implemented
 	if (disease->infectiousness > 100) {
 		return;
 	}
-	printf("Anti-vaxxer movement in %s increased infectiousness.\n", region->name);
+	PrintColored("Anti-vaxxer movement in \n", RED);
+    printf("%s", region->name);
+    PrintColored(" increased infectiousness.\n", RED);
 }
+
 
 void vaccine_progress_up(World* world) { // implemented
 	if (world->disease_detected == 0) {
@@ -234,7 +240,7 @@ void vaccine_progress_up(World* world) { // implemented
         }
         else {
             world->vaccine_progress += 10; // increase vaccine progress
-            printf("Vaccine progress increased.\n");
+            PrintColored("Vaccine progress increased.\n", GREEN);
         }
     }
 }
@@ -245,7 +251,7 @@ void vaccine_progress_down(World* world) { // implemented
 	}
     else {
         world->vaccine_progress -= 30; // decrease vaccine progress
-        printf("Vaccine progress decreased.\n");
+        PrintColored("Vaccine progress decreased.\n", ORANGE);
         if (world->vaccine_progress < 1) {
             world->vaccine_progress = 1; // cap at 1
             return;
@@ -562,8 +568,7 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
 }
 
 void PrintDetectionLog(double infection_rate, double death_rate, Regions* region) {
-    // Print detailed status
-    printf("Initial Analysis:\n");
+    PrintColored("Initial Analysis:\n", PINK);
     printf("Infection Rate: %.2f%%\n", infection_rate * 100);
     printf("Death Rate: %.2f%%\n", death_rate * 100);
     printf("Population Density Risk Factor: %d/10\n", region->population_density);
