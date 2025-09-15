@@ -72,7 +72,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (world->vaccine_progress > 500) {
                 if (world->vaccine_progress > 850) {
-                    if (world->vaccine_progress > 999) {
+                    if (world->vaccine_progress > 999) {// becomes more likely as vaccine progresses
                         if (rng > 9) {
                             anti_vaxxers(current_region, disease);
                             // need to add mesage
@@ -144,6 +144,10 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             long long new_deceased = Kill(current_region->sick_people, disease->lethality, current_region->healthy_people, disease->severity);
             current_region->sick_people -= new_deceased;
             current_region->dead_people += new_deceased;
+            if (current_region->sick_people > 0 && world->disease_detected == 0) {
+                DiseaseDetected(current_region, disease, world);
+            }
+
             if (day_counter % 7 == 0) { // event can happen once a week
                 ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
                 Sleep(1000);
@@ -160,7 +164,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
 	}
 }
 
-void ClosingBorders(Regions* region, Disease* disease){// might cut
+void ClosingBorders(Regions* region, Disease* disease){// implemented
 	disease->infectiousness = (int)(disease->infectiousness * 0.7);
 	printf("Borders closed in %s.\n", region->name);
 }
@@ -481,5 +485,42 @@ void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions) {
     long long population = current_region->healthy_people + current_region->sick_people + current_region->dead_people;
     if (population > 0 && (current_region->sick_people > (population / 10))) {
         InfectRandomRegion(world_regions, current_region);
+    }
+}
+
+void DiseaseDetected(Regions* region, Disease* disease, World* world) {
+    // Only proceed if disease wasn't already detected
+    if (world->disease_detected == 0) {
+        // Calculate total population
+        double total_population = (double)(region->healthy_people + region->sick_people + region->dead_people);
+        // Calculate infection rate (% of population infected)
+        double infection_rate = (double)region->sick_people / total_population;
+        // Calculate death rate (% of infected who died)
+        double death_rate = 0.0;
+        if (region->sick_people + region->dead_people > 0) {
+            death_rate = (double)region->dead_people / (region->sick_people + region->dead_people);
+        }
+        // Factor in population density for spread risk
+        double spread_risk = infection_rate * (region->population_density / 10.0);
+        // Adjust research investment based on spread risk and death rate
+        if (spread_risk > 0.15 || death_rate > 0.1) {
+            world->disease_detected = 1;
+            PrintColored("URGENT: Highly infectious or lethal disease detected in ", RED);
+            printf("%s!\n", region->name);
+        } else if (spread_risk > 0.1 || death_rate > 0.5) {
+            world->disease_detected = 1;
+            PrintColored("WARNING: Disease outbreak detected in ", YELLOW);
+            printf("%s!\n", region->name);
+        } 
+        // Print detailed status
+        printf("Initial Analysis:\n");
+        printf("Infection Rate: %.2f%%\n", infection_rate * 100);
+        printf("Death Rate: %.2f%%\n", death_rate * 100);
+        printf("Population Density Risk Factor: %d/10\n", region->population_density);
+        printf("Initial Research Investment: %d\n", region->research_investment);
+        // If highly dangerous, trigger immediate response
+        if (death_rate > 0.15 || (spread_risk > 0.25 && death_rate > 0.1)) {
+            ClosingBorders(region, disease);
+        }
     }
 }

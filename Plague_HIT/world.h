@@ -28,7 +28,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
 void print_World(const World* world);
 void print_region(const Regions* region);
 void SetUpWorld(World* world, Regions* world_regions);
-void ClosingBorders(Regions* region, Disease* disease);
+void ClosingBorders(Regions* region, Disease* disease);//implemented
 void Curfew(Regions* region, Disease* disease);
 void InvestInResearch(Regions* region, World* world);
 void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable);
