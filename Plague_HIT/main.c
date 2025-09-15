@@ -25,6 +25,12 @@ void main() {
     while (world.sick_people != 0 && world.healthy_people != 0 || world.disease_cured == 0)
     {
         Regions* current_region = world_regions; // precaution to not run up loop
+        if (day_counter % 7 == 0) {
+            int week_num = day_counter / 7;
+            PrintColored("week ", ORANGE);
+            printf("%d:\n", week_num);
+        }
+        UpdateWorld(&world, world_regions);
         DayLoop(current_region, &disease, &world, day_counter, current_region);
         day_counter++;
     }

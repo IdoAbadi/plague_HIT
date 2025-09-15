@@ -40,6 +40,7 @@ void public_opinion_escalate(Regions* region, Disease* disease);// implemented
 void public_opinion_mitigate(Regions* region, Disease* disease);// implemented
 void public_opinion(Regions* region, Disease* disease);
 void print_infected_regions(Regions* world_regions);
+void UpdateWorld(World* world, Regions* world_regions);
 
 void StartDisease(Regions* world_regions, char chosen_region[50]);
 void SelectDiseaseOrigin(Regions* world_regions, int continent);

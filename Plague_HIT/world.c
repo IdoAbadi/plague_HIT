@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include "design.h"
 #include "disease.h"
 #include "world.h"
 
@@ -34,6 +35,19 @@ void SetUpWorld(World* world , Regions* world_regions) {
 	}
 }
 
+void UpdateWorld(World* world, Regions* world_regions) {
+    Regions* current_region = world_regions;
+    int count = 0;
+    while (current_region)
+    {
+        count++;
+        world->healthy_people += current_region->healthy_people;
+        world->sick_people += current_region->sick_people;
+        world->dead_people += current_region->dead_people;
+        current_region = current_region->next_region; // moves to next item
+    }
+}
+
 void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable) { // not finished
 	int event = rand() % 6;//number of events +1
     int rng = rand() % 20;
@@ -42,10 +56,13 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 	case 0:
         if (rng < 10) {
             vaccine_progress_up(world);
+            PrintColored("There have been major breakthrough in vaccine development in ", BLUE);
+            printf("%s. \n", current_region->name);
 
 		}
 		else if(rng > 16){
             vaccine_progress_down(world);
+            // need to add message
 		}
         else {
             printf("No event this week in %s.\n", current_region->name);
@@ -58,16 +75,19 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                     if (world->vaccine_progress > 999) {
                         if (rng > 9) {
                             anti_vaxxers(current_region, disease);
+                            // need to add mesage
                             break;
                         }
                     }
                     if (rng > 13) {
                         anti_vaxxers(current_region, disease);
+                        // need to add mesage
                         break;
                     }
                 }
                 if (rng > 16) {
                     anti_vaxxers(current_region, disease);
+                    // need to add mesage
                     break;
                 }
             }
@@ -80,9 +100,11 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (world->disease_detected == 1) {
             if (rng > 13) {
                 public_opinion_escalate(current_region, disease);
+                // need to add mesage
             }
             else if (rng < 3) {
                 public_opinion_mitigate(current_region, disease);
+                // need to add mesage
             }
             else {
                 printf("No event this week in %s.\n", current_region->name);
@@ -92,7 +114,9 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
     case 3:
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
+            // need to add mesage inside the function
         }
+        break;
 	default:
 		printf("No event this week in %s.\n", current_region->name);
 		break;
@@ -122,13 +146,13 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             current_region->dead_people += new_deceased;
             if (day_counter % 7 == 0) { // event can happen once a week
                 ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
-                Sleep(5000);
+                Sleep(1000);
             }
             if (day_counter % 30 == 0) {// special event once a month
                 TriggerInfectOtherRegion(current_region, world_regions);
-                Sleep(3000);
+                Sleep(1000);
                 print_World(world);
-                Sleep(3000);
+                Sleep(1000);
             }
             //Cure()
         }
