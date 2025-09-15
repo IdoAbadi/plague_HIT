@@ -19,7 +19,7 @@ int ChooseContinent();
 void mutate_lethality(Disease* disease);
 void mutate_infectiousness(Disease* disease);
 void mutate_severity(Disease* disease);
-void print_disease(const Disease* disease);
+void PrintDisease(const Disease* disease);
 void SetUpDisease(Disease* disease);
 void plague_mutation(Disease* disease, int* enable);
 void clean_input_buffer();

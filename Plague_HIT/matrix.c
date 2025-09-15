@@ -3,9 +3,23 @@
 #include "matrix.h"
 #include "world.h"
 
-void create_matrix(World* world) {
+int FindBiggest(long long healthy, long long sick, long long dead) {
+	int temp1 = 0;
+	if (temp1 < healthy) {
+		temp1 = (int)healthy / 100000000;
+	}
+	if (temp1 < sick / 100000000) {
+		temp1 = (int)sick / 100000000;
+	}
+	if (temp1 < dead / 100000000) {
+		temp1 = (int)dead / 100000000;
+	}
+	return temp1;
+}
+
+void CreateMatrix(struct World* world) {
 	int rows = 3;
-	int cols = FindBiggest(world);
+	int cols = FindBiggest(world->healthy_people, world->sick_people, world->dead_people);
 
 	char** matrix = (char**)malloc(rows * sizeof(char*));
 	if (matrix == NULL) {
@@ -22,51 +36,36 @@ void create_matrix(World* world) {
 	}
 	for (int i = 0; i < rows; i++) {
 		if (i == 0) {
-			int temp = world->healthy_people / 100000000;
+			int temp = (int)world->healthy_people / 100000000;
 			for (int j = 0; j < temp; j++) {
-				matrix[i][j] = "#";
+				matrix[i][j] = '#';
 			}
 		}
 		else if (i == 1) {
-			int temp = world->sick_people / 100000000;
+			int temp = (int)world->sick_people / 100000000;
 			for (int j = 0; j < temp; j++) {
-				matrix[i][j] = "#";
+				matrix[i][j] = '#';
 			}
 		}
 		else {
-			int temp = world->dead_people / 100000000;
+			int temp = (int)world->dead_people / 100000000;
 			for (int j = 0; j < temp; j++) {
-				matrix[i][j] = "#";
+				matrix[i][j] = '#';
 			}
 		}
 	}
 }
 
-int FindBiggest(World* world) {
-	int temp1 = 0;
-	if (temp1 < world->healthy_people) {
-		temp1 = world->healthy_people / 100000000;
-	}
-	if (temp1 < world->sick_people / 100000000){
-		temp1 = world->sick_people / 100000000;
-	}
-	if (temp1 < world->dead_people / 100000000) {
-		temp1 = world->dead_people / 100000000;
-	}
-	return temp1;
-}
-
-
-void free_matrix(int** matrix, int rows) {
+void FreeMatrix(int** matrix, int rows) {
 	for (int i = 0; i < rows; i++) {
 		free(matrix[i]);
 	}
 	free(matrix);
 }
 
-void print_matrix(int** matrix) {
+void PrintMatrix(int** matrix, World* world) {
 	int rows = 3;
-	int cols = FindBiggest(matrix);
+	int cols = FindBiggest(world->healthy_people, world->sick_people, world->dead_people);
 	for (int i = 0; i < rows; i++) {
 		if (i == 0) {
 			printf("Healthy People:  ");

@@ -4,11 +4,14 @@
 #include "disease.h"
 #include "world.h"
 #include "FileFuncs.h"
+#include "design.h"
+#include "sort.h"
 
 void main() {
     int regions_to_aloocate = region_amount;
     srand((unsigned int)time(NULL)); // seed randomness
     int day_counter = 1;
+    PrintWelcomeMessage();
     Disease disease; // if pointer decay issues come up allocate dynamically to solve
     World world = {0}; // if pointer decay issues come up allocate dynamically to solve
     Regions* world_regions = AllocateRegions(regions_to_aloocate); //creates region list
@@ -18,6 +21,7 @@ void main() {
     SetUpDisease(&disease); // user inputs data to disease 
     int start_continent = ChooseContinent();
     SelectDiseaseOrigin(world_regions, start_continent);
+    ClearConsole();
     while (world.sick_people != 0 && world.healthy_people != 0 || world.disease_cured == 0)
     {
         Regions* current_region = world_regions; // precaution to not run up loop

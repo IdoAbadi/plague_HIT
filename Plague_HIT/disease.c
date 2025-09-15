@@ -7,7 +7,7 @@
 
 #pragma warning(disable:6031) // gets rid of warning to check if scanf_s was succesful
 
-void print_disease(const Disease* disease) {
+void PrintDisease(const Disease* disease) {
 	printf("Disease: %s\n", disease->name);
 	printf("Infectiousness: %d\n", disease->infectiousness);
 	printf("Severity: %d\n", disease->severity);

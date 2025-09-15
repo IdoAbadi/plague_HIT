@@ -12,22 +12,22 @@ const char* PURPLE = "\033[0;35m";
 const char* PINK = "\033[1;35m";
 const char* RESET = "\033[0m";
 
-void print_colored(const char* text, const char* color_code) {
+void PrintColored(const char* text, const char* color_code) {
     printf("%s%s\033[0m", color_code, text);
 }
 
-void print_welcome_message() {
-    print_colored("===============================================================================================================\n", YELLOW);
-    print_colored("                                    Welcome to Plague H.I.T!\n", BLUE);
-    print_colored("===============================================================================================================\n", YELLOW);
-    print_colored("                    A simulation of survival, strategy, and the unstoppable spread of disease.\n", BLUE);
-    print_colored("===============================================================================================================\n", YELLOW);
-    print_colored("                              Brace yourself... the outbreak begins!\n", BLUE);
-    print_colored("===============================================================================================================\n", YELLOW);
+void PrintWelcomeMessage() {
+    PrintColored("===============================================================================================================\n", YELLOW);
+    PrintColored("                                    Welcome to Plague H.I.T!\n", BLUE);
+    PrintColored("===============================================================================================================\n", YELLOW);
+    PrintColored("                    A simulation of survival, strategy, and the unstoppable spread of disease.\n", BLUE);
+    PrintColored("===============================================================================================================\n", YELLOW);
+    PrintColored("                              Brace yourself... the outbreak begins!\n", BLUE);
+    PrintColored("===============================================================================================================\n\n", YELLOW);
     Sleep(3000);
 }
 
-void clear_console() {
+void ClearConsole() {
 #ifdef _WIN32
     system("cls");
 #else

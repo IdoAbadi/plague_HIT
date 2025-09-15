@@ -11,9 +11,9 @@ const char* PURPLE;
 const char* PINK;
 const char* RESET;
 
-void print_colored(const char* text, const char* color_code);
-void print_welcome_message();
-void clear_console();
+void PrintColored(const char* text, const char* color_code);
+void PrintWelcomeMessage();
+void ClearConsole();
 
 #endif
 #pragma once
