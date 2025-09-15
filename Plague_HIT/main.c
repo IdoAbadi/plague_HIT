@@ -24,16 +24,16 @@ void main() {
     SelectDiseaseOrigin(world_regions, start_continent);
     ClearConsole();
     CloseRegionDataFile(Region_Data);
-    while (world.sick_people != 0 && world.healthy_people != 0 || world.disease_cured == 0)
+    UpdateWorld(&world, world_regions);
+    while (world.sick_people >= 0 || world.disease_cured == 1)
     {
         Regions* current_region = world_regions; // precaution to not run up loop
-        //UpdateWorld(&world, world_regions);
         DayLoop(current_region, &disease, &world, day_counter, current_region);
-        WeekLoop(day_counter, world_regions, &disease, &world, &mutation_enable);//good
-        SetUpInvestment(&world, world_regions);//good 
-        MonthLog(day_counter, &world, world_regions);//good
+        WeekLoop(day_counter, world_regions, &disease, &world, &mutation_enable);
+        SetUpInvestment(&world, world_regions);
+        MonthLog(day_counter, &world, world_regions);
         day_counter++;
     }
-
+    printf("end");
     freeRegions(world_regions);
 }

@@ -140,7 +140,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 }
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter, Regions* world_regions) {
-    printf("%d\n", day_counter);// for debuging
+    //printf("%d\n", day_counter);// for debuging
     double total_research_progress = 0.0;
     while (current_region) {
 		//do actions on regions
@@ -162,7 +162,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             current_region->sick_people -= new_deceased;
             current_region->dead_people += new_deceased;
             if (current_region->sick_people > 0 && world->disease_detected == 0) {
-                DiseaseDetected(current_region, disease, world, world_regions);
+                DiseaseDetected(current_region, disease, world, world_regions); 
             }
             // Calculate research progress if disease is detected
             if (world->disease_detected == 1 && current_region->sick_people > 0) {
@@ -171,6 +171,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             }
             //Cure()
         }
+        UpdateWorld(world, world_regions);
 		current_region = current_region->next_region; // moves to next item
 	}
 
