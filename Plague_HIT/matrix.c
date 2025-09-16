@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "matrix.h"
 #include "world.h"
+#include "design.h"
 
 #define ROWS 3
 
@@ -51,15 +52,14 @@ char** CreateMatrix(struct World* world) {
     for (int i = 0; i < ROWS; i++) {
         int temp;
         if (i == 0) {
-            temp = (int)world->healthy_people / 100000000;
+            temp = FindBiggest(world->healthy_people, 0, 0);
         }
         else if (i == 1) {
-            temp = (int)world->sick_people / 100000000;
+            temp = FindBiggest(0, world->sick_people, 0);
         }
         else {
-            temp = (int)world->dead_people / 100000000;
+            temp = FindBiggest(0, 0, world->dead_people);
         }
-        
         for (int j = 0; j < temp && j < cols; j++) {
             matrix[i][j] = '#';
         }
@@ -87,13 +87,13 @@ void PrintMatrix(World* world) {
     int cols = FindBiggest(world->healthy_people, world->sick_people, world->dead_people);
     for (int i = 0; i < ROWS; i++) {
         if (i == 0) {
-                printf("Healthy People:  ");
+            PrintColored("Healthy people:", GREEN);
         }
         else if (i == 1) {
-                printf("Sick people:   ");
+            PrintColored("Sick people:", YELLOW);
         }
         else {
-                printf("Dead people:    ");
+            PrintColored("Dead people:", RED);
         }
         for (int j = 0; j < cols; j++) {
             printf("%c", matrix[i][j]);

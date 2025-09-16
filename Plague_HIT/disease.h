@@ -8,7 +8,7 @@ typedef struct Disease {
     int lethality;// 0-100
 } Disease; 
 
-long long Infect(long long infectiousness, long long infected, long long healthy);
+long long Infect(int infectiousness, long long infected, long long healthy);
 long long Kill(long long infected, int lethality, long long healthy, int severity);
 
 int HowContaigous(int tmp);

@@ -15,13 +15,22 @@ void PrintDisease(const Disease* disease) {
 	printf("Lethality: %d\n", disease->lethality);
 }
 
-long long Infect(long long infectiousness, long long infected, long long healthy) { // add population density to infect calculation
-    double expected = (infectiousness / 100.0) * infected;// scale infections by infectiousness
-    int variation = rand() % (infected + 1); // random 0..infected
-    long long new_infected = (int)(expected * 0.7 + variation * 0.3);
-
-    // cap at healthy population
-    if (new_infected > healthy) {
+long long Infect(int infectiousness, long long infected, long long healthy) {
+    // Base infection rate (0.0 - 1.0)
+    double infection_rate = infectiousness / 100.0;
+    
+    // Calculate expected infections
+    double expected = infection_rate * infected;
+    
+    // Add controlled random variation (±30%)
+    double random_factor = 0.7 + ((double)rand() / RAND_MAX) * 0.6;
+    long long new_infected = (long long)(expected * random_factor);
+    
+    // Cap at available healthy population
+    if (new_infected > (healthy / 4) && healthy > 100000) {
+        new_infected = (healthy / 4);
+    }
+    else if ( healthy < 1000) {
         new_infected = healthy;
     }
     return new_infected;
@@ -30,6 +39,9 @@ long long Infect(long long infectiousness, long long infected, long long healthy
 long long Kill(long long infected, int lethality, long long healthy, int severity) {
     if (infected <= 0) {
         return 0;
+    }
+    else if (infected < 10) {
+        return infected;
     }
     double effective_lethality = lethality + (severity / 2.0);// severity can increse leathality by max of 50
     effective_lethality = effective_lethality / 1.5;

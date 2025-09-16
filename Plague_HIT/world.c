@@ -146,7 +146,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
     double total_research_progress = 0.0;
     while (current_region) {
 		//do actions on regions
-        if (current_region->healthy_people <= 0) {
+        if (current_region->healthy_people < 0) {
             current_region->healthy_people = 0;
         }
         else
@@ -156,7 +156,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             current_region->sick_people += new_infected;
         }
 
-        if (current_region->sick_people <= 0) {
+        if (current_region->sick_people < 0) {
             current_region->sick_people = 0;
         }
         else {// only enter if country is infected (sick_people > 0)
@@ -173,7 +173,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             }
             
         }
-        Cure(disease, world, world_regions);
+        Cure(disease, world, current_region);
         UpdateWorld(world, world_regions);
 		current_region = current_region->next_region; // moves to next item
 	}
@@ -208,7 +208,7 @@ void MonthLog(int day_counter, World* world, Regions* world_regions) {
     if (day_counter % 30 == 0) {
         Regions* current_region = world_regions;
         print_World(world);
-        //PrintMatrix(world);
+        PrintMatrix(world);
         if (world->disease_detected == 1) {
             PrintColored("Global Vaccine Research Progress: ", BLUE);
             printf("%.1f%%\n", (world->vaccine_progress / 30.0));

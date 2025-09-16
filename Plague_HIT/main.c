@@ -27,10 +27,11 @@ void main() {
     while (world.sick_people >= 0 || world.disease_cured == 1)
     {
         Regions* current_region = world_regions; // precaution to not run up loop
-        DayLoop(current_region, &disease, &world, day_counter, current_region);
-        WeekLoop(day_counter, world_regions, &disease, &world);
-        SetUpInvestment(&world, world_regions);
-        MonthLog(day_counter, &world, world_regions);
+        Regions* world_regions_copy = world_regions;
+        DayLoop(current_region, &disease, &world, day_counter, world_regions_copy);
+        WeekLoop(day_counter, world_regions_copy, &disease, &world);
+        SetUpInvestment(&world, world_regions_copy);
+        MonthLog(day_counter, &world, world_regions_copy);
         day_counter++;
     }
     printf("end");
