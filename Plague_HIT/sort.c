@@ -53,7 +53,7 @@ AffectedRegions* SortAffectedRegions(Regions* world_regions) {
 }
 
 void SaveToFile(AffectedRegions* affected_array) {
-    FILE* file = fopen("FileFunc.txt", "w");
+    FILE* file = fopen("FileFuncs.txt", "w");
     if (file == NULL) {
         printf("Error opening file for writing.\n");
         return;
@@ -65,7 +65,7 @@ void SaveToFile(AffectedRegions* affected_array) {
 }
 
 void AppendToFile(AffectedRegions* affected_array) {
-    FILE* file = fopen("FileFunc.txt", "a");
+    FILE* file = fopen("FileFuncs.txt", "a");
     if (file == NULL) {
         printf("Error opening file for appending.\n");
         return;

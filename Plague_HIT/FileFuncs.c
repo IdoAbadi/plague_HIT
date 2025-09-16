@@ -85,3 +85,27 @@ void freeRegions(Regions* world_regions) {
 		free(temp); 
 	}
 }
+
+void PrintEndLog(Disease* disease, World* world) { 
+	FILE* EndLog = OpenEndLog(disease->name); //function that returns a file pointer
+	if (EndLog == NULL) {
+		printf("Error opening end log file.\n");
+		return;
+	}
+	fputs("-----End of Simulation-----\n", EndLog);
+	fclose(EndLog);
+}
+
+FILE* OpenEndLog(char* filename) {
+	char fullname[200];
+	strncpy_s(fullname, sizeof(fullname), filename, _TRUNCATE); // copy disease name
+	strcat_s(fullname, sizeof(fullname), ".txt"); // add .txt
+	
+	FILE* EndLog = fopen(fullname, "a");
+	if (EndLog == NULL) {
+		printf("Error opening end log file.\n");
+		return NULL;
+	}
+	fputs("----New simulation Log Started----\n", EndLog);
+	return EndLog;
+}
