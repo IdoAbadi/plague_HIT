@@ -45,10 +45,6 @@ long long Kill(long long infected, int leathality, long long healthy, int severi
     return infected;
 }
 
-int Cure() {
-    return 0;
-}
-
 void SetUpDisease(Disease* disease) {
     int tmp = 0;
     PrintColored("What's the name of your disease?\n", YELLOW);

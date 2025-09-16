@@ -81,17 +81,17 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                 if (world->vaccine_progress > 850) {
                     if (world->vaccine_progress > 999) {// becomes more likely as vaccine progresses
                         if (rng > 9) {
-                            anti_vaxxers(current_region, disease);
+                            anti_vaxxers(current_region, world);
                             break;
                         }
                     }
                     if (rng > 13) {
-                        anti_vaxxers(current_region, disease);
+                        anti_vaxxers(current_region, world);
                         break;
                     }
                 }
                 if (rng > 16) {
-                    anti_vaxxers(current_region, disease);
+                    anti_vaxxers(current_region, world);
                     break;
                 }
             }
@@ -142,7 +142,6 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
 }
 
 void DayLoop(Regions* current_region, Disease* disease, World* world, int day_counter, Regions* world_regions) {
-    //printf("%d\n", day_counter);// for debuging
     double total_research_progress = 0.0;
     while (current_region) {
 		//do actions on regions
@@ -171,8 +170,9 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
                 double region_research = CalculateRegionResearch(current_region, disease);
                 total_research_progress += region_research;
             }
-            //Cure()
+            
         }
+        Cure(disease, world, world_regions);
         UpdateWorld(world, world_regions);
 		current_region = current_region->next_region; // moves to next item
 	}
@@ -180,8 +180,8 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
     // Apply accumulated research progress
     if (world->disease_detected == 1) {
         world->vaccine_progress += (int)total_research_progress;
-        if (world->vaccine_progress > 1000) {
-            world->vaccine_progress = 1000;
+        if (world->vaccine_progress > CURE_REACHED) {
+            world->vaccine_progress = CURE_REACHED;
         }
     }
 }
@@ -208,7 +208,7 @@ void MonthLog(int day_counter, World* world, Regions* world_regions) {
         Regions* current_region = world_regions;
         print_World(world);
         PrintColored("Global Vaccine Research Progress: ", BLUE);
-        printf("%.1f%%\n", (world->vaccine_progress / 10.0));
+        printf("%.1f%%\n", (world->vaccine_progress / 30.0));
         while (current_region) {
             if (current_region->sick_people > 0) {
                 TriggerInfectOtherRegion(current_region, world_regions);
@@ -230,20 +230,6 @@ void Curfew(Regions* region, Disease* disease) {// might cut
 	disease->infectiousness = (int)(disease->infectiousness * 0.8);
 	PrintColored("Curfew imposed in \n", RED);
     printf("%s\n", region->name);
-}
-
-void InvestInResearch(Regions* region, World* world) {
-	if (region->research_investment < 1000) {
-		region->research_investment += 100; // increase investment
-		printf("Increased research investment in %s to %d.\n", region->name, region->research_investment);
-	}
-}
-
-void IsCureReached(World* world) {
-	if (world->vaccine_progress >= 10000) {
-		world->disease_cured = 1;
-		PrintColored("Disease cured! Starting vaccine distribution!\n", GREEN);
-	}
 }
 
 void anti_vaxxers(Regions* region, World* world) {// implemented
@@ -308,15 +294,6 @@ void public_opinion_mitigate(Regions* region, Disease* disease) {// implemented
         disease->infectiousness = (int)(disease->infectiousness * 0.85);
         printf("Public in %s are following regulations more closely\n", region->name);
     }
-}
-
-void public_opinion(Regions* region, Disease* disease) {// might cut
-	if ((rand() % 2) == 0) {
-		public_opinion_escalate(region, disease);
-	}
-	else {
-		public_opinion_mitigate(region, disease);
-	}
 }
 
 void print_infected_regions(Regions* world_regions) {
@@ -635,5 +612,48 @@ void SetUpInvestment(World* world, Regions* world_regions) {
             curr->research_investment = curr->development_level * 10;
             curr = curr->next_region;
         }
+    }
+}
+
+void ApplyCure(Regions* region) {
+    if (region->sick_people > 0) {
+        // Calculate base cure amount (25% of sick people)
+        long long percent_based_cure = (long long)(region->sick_people * 0.25); 
+        // Ensure at least 1,000,000 people are cured if there are enough sick people
+        long long min_cure = 1000000;
+        long long cured;
+        if (percent_based_cure > min_cure) {
+            cured = percent_based_cure;
+        }
+        else {
+            cured = min_cure;
+        }
+        // Don't cure more people than are actually sick
+        if (cured > region->sick_people) {
+            cured = region->sick_people;
+        }
+        region->sick_people -= cured;
+        region->healthy_people += cured;
+        if (cured > 0) {
+            PrintColored("Distributing cure in ", GREEN);
+            printf("%s: ", region->name);
+            PrintColored("Cured ", GREEN);
+            printf("%lld ", cured);
+            PrintColored("people!\n", GREEN);
+        }
+    }
+}
+
+void Cure(Disease* disease, World* world, Regions* current_region) {
+    if (world->vaccine_progress >= CURE_REACHED && !world->disease_cured) {
+        // First time reaching cure - announce it once
+        world->disease_cured = 1;
+        disease->infectiousness = (int)(disease->infectiousness * 0.5);
+        PrintColored("\n=== CURE DISCOVERED! Global vaccination campaign begins! ===\n\n", GREEN);
+    }
+
+    // Apply cure to current region only if cure is discovered
+    if (world->disease_cured) {
+        ApplyCure(current_region);
     }
 }
