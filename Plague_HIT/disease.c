@@ -126,7 +126,10 @@ void mutate_infectiousness(Disease* disease) {
     if (disease->infectiousness >= 100) {
         return; // No mutations if already at max
     }
-    int change = (rand() % 11) - 5;  // From -5 to 5
+    int change = (rand() % 14) - 5;  // From -5 to 8
+    if (change == 0) {//mutation always occurs
+        change = 1;
+    }
     disease->infectiousness += change;
     if (disease->infectiousness < 1) {
         disease->infectiousness = 1;
@@ -137,7 +140,10 @@ void mutate_severity(Disease* disease) {
     if (disease->severity >= 100) {
         return; // No mutations if already at max
 	}
-    int change = (rand() % 11) - 5;  // From -5 to 5
+    int change = (rand() % 14) - 5;  // From -5 to 8
+    if (change == 0) {//mutation always occurs
+        change = 1;
+    }
     disease->severity += change;
     if (disease->severity < 0) {
         disease->severity = 0;
@@ -148,7 +154,10 @@ void mutate_lethality(Disease* disease) {
     if (disease->lethality >= 100) {
         return; // No mutations if already at max
     }
-    int change = (rand() % 11) - 5;  // From -5 to 5
+    int change = (rand() % 14) - 5;  // From -5 to 8
+    if (change == 0) {//mutation always occurs
+        change = 1;
+    }
     disease->lethality += change;
     if (disease->lethality < 0) {
         disease->lethality = 0;

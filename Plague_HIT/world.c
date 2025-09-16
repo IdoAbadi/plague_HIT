@@ -53,7 +53,7 @@ void UpdateWorld(World* world, Regions* world_regions) {
 }
 
 void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable) { 
-	int event = rand() % 6;//number of events +1
+	int event = rand() % 5;//number of events +2
     int rng = rand() % 20;
 	switch (event)
 	{
@@ -82,22 +82,16 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                     if (world->vaccine_progress > 999) {// becomes more likely as vaccine progresses
                         if (rng > 9) {
                             anti_vaxxers(current_region, disease);
-                            PrintColored("The anti-vaxxers movement is on the rise in ", RED);
-                            printf("%s. \n", current_region->name);
                             break;
                         }
                     }
                     if (rng > 13) {
                         anti_vaxxers(current_region, disease);
-                        PrintColored("The anti-vaxxers movement is on the rise in ", RED);
-                        printf("%s. \n", current_region->name);
                         break;
                     }
                 }
                 if (rng > 16) {
                     anti_vaxxers(current_region, disease);
-                    PrintColored("The anti-vaxxers movement is on the rise in ", RED);
-                    printf("%s. \n", current_region->name);
                     break;
                 }
             }
@@ -124,12 +118,20 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                 printf("%s.\n", current_region->name);
             }
         }
+        else {
+            PrintColored("No event this week in ", CYAN);
+            printf("%s.\n", current_region->name);
+        }
 		break;
     case 3:
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
             PrintColored("The plague mutates, creating new challenges in ", RED);
             printf("%s. \n", current_region->name);
+        }
+        else {
+            PrintColored("No event this week in ", CYAN);
+            printf("%s.\n", current_region->name);
         }
         break;
 	default:
@@ -184,16 +186,16 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
     }
 }
 
-void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* world, int* mutation_enable) {
+void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* world) {
     Regions* current_region = world_regions;
-
+    int mutation_enable = 1;// mutation can only happen in one region each week
     if (day_counter % 7 == 0) { // event can happen once a week
         int week_num = day_counter / 7;
         PrintColored("week ", ORANGE);
         printf("%d:\n", week_num);
         while (current_region) {
             if (current_region->sick_people > 0) {
-                ChooseSimpleEvent(current_region, disease, world, mutation_enable);
+                ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
                 Sleep(500);
             }
             current_region = current_region->next_region;
@@ -215,6 +217,7 @@ void MonthLog(int day_counter, World* world, Regions* world_regions) {
             current_region = current_region->next_region;
         }
     }
+
 }
 
 void ClosingBorders(Regions* region, Disease* disease){// implemented
@@ -224,7 +227,7 @@ void ClosingBorders(Regions* region, Disease* disease){// implemented
 }
 
 void Curfew(Regions* region, Disease* disease) {// might cut 
-	disease->infectiousness = (int)(disease->infectiousness * 0.4);
+	disease->infectiousness = (int)(disease->infectiousness * 0.8);
 	PrintColored("Curfew imposed in \n", RED);
     printf("%s\n", region->name);
 }
@@ -243,14 +246,16 @@ void IsCureReached(World* world) {
 	}
 }
 
-void anti_vaxxers(Regions* region, Disease* disease) {// implemented
-	disease->infectiousness += 3; // increase infectiousness due to anti-vaxxer movement
-	if (disease->infectiousness > 100) {
-		return;
+void anti_vaxxers(Regions* region, World* world) {// implemented
+	if (world->vaccine_progress < 10000) {
+        world->vaccine_progress -= (int)((world->vaccine_progress * 3) / 100);
+        PrintColored("Anti-vaxxer movement in \n", RED);
+        printf("%s", region->name);
+        PrintColored(" decreased vaccine progress.\n", RED);
 	}
-	PrintColored("Anti-vaxxer movement in \n", RED);
-    printf("%s", region->name);
-    PrintColored(" increased infectiousness.\n", RED);
+    else {// vaccine reached
+        return;
+    }
 }
 
 
@@ -263,7 +268,7 @@ void vaccine_progress_up(World* world) { // implemented
             return;
         }
         else {
-            world->vaccine_progress += 10; // increase vaccine progress
+            world->vaccine_progress += 50; // increase vaccine progress
             PrintColored("Vaccine progress increased.\n", GREEN);
         }
     }
@@ -274,7 +279,7 @@ void vaccine_progress_down(World* world) { // implemented
 		return; // can't regress vaccine if disease not detected
 	}
     else {
-        world->vaccine_progress -= 30; // decrease vaccine progress
+        world->vaccine_progress -= 120; // decrease vaccine progress
         PrintColored("Vaccine progress decreased.\n", YELLOW);
         if (world->vaccine_progress < 1) {
             world->vaccine_progress = 1; // cap at 1
@@ -563,20 +568,26 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
             world->disease_detected = 1;
             PrintColored("URGENT: Highly infectious or lethal disease detected in ", RED);
             printf("%s!\n", region->name);
+            Sleep(500);
             PrintDetectionLog(infection_rate, death_rate, region);
+            Sleep(500);
         }
         else if (spread_risk > 0.1 || death_rate > 0.3) {
             world->disease_detected = 1;
             PrintColored("WARNING: Disease outbreak detected in ", ORANGE);
             printf("%s!\n", region->name);
+            Sleep(500);
             PrintDetectionLog(infection_rate, death_rate, region);
+            Sleep(500);
         }
 
         // If highly dangerous, trigger immediate response
         if (death_rate > 0.65 || (spread_risk > 0.25 && death_rate > 0.5)) {
             PrintColored("URGENT: Extremely infectious and lethal disease detected in ", RED);
             printf("%s!\n", region->name);
+            Sleep(500);
             PrintDetectionLog(infection_rate, death_rate, region);
+            Sleep(500);
             ClosingBorders(region, disease);
         }
     }

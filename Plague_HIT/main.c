@@ -11,7 +11,6 @@ void main() {
     int regions_to_aloocate = region_amount;
     srand((unsigned int)time(NULL)); // seed randomness
     int day_counter = 1;
-    int mutation_enable = 1;
     PrintWelcomeMessage();
     Disease disease; // if pointer decay issues come up allocate dynamically to solve
     World world = {0}; // if pointer decay issues come up allocate dynamically to solve
@@ -29,7 +28,7 @@ void main() {
     {
         Regions* current_region = world_regions; // precaution to not run up loop
         DayLoop(current_region, &disease, &world, day_counter, current_region);
-        WeekLoop(day_counter, world_regions, &disease, &world, &mutation_enable);
+        WeekLoop(day_counter, world_regions, &disease, &world);
         SetUpInvestment(&world, world_regions);
         MonthLog(day_counter, &world, world_regions);
         day_counter++;

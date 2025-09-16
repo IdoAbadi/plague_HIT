@@ -32,7 +32,7 @@ void ClosingBorders(Regions* region, Disease* disease);//implemented
 void Curfew(Regions* region, Disease* disease);
 void InvestInResearch(Regions* region, World* world);
 void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, int* mutation_enable);
-void anti_vaxxers(Regions* region, Disease* disease);// implemented
+void anti_vaxxers(Regions* region, World* world);// implemented
 void vaccine_progress_up(World* world);// implemented
 void vaccine_progress_down(World* world);// implemented
 void IsCureReached(World* world);
@@ -48,7 +48,7 @@ void InfectRandomRegion(Regions* world_regions, Regions* exclude_region);
 void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions);
 void PrintDetectionLog(double infection_rate, double death_rate, Regions* region);
 void SetUpInvestment(World* world, Regions* world_regions);
-void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* world, int* mutation_enable);
+void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* world);
 void MonthLog(int day_counter, World* world, Regions* world_regions);
 
 double CalculateRegionResearch(struct Regions* region, struct Disease* disease);
