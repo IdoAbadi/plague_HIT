@@ -127,7 +127,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
     case 3:
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
-            PrintColored("The plague mutates, creating new challenges in ", RED);
+            PrintColored("The disease has been mutated, new strain of the virus was found in ", RED);
             printf("%s. \n", current_region->name);
         }
         else {
@@ -259,7 +259,6 @@ void vaccine_progress_up(World* world) { // implemented
         }
         else {
             world->vaccine_progress += 50; // increase vaccine progress
-            PrintColored("Vaccine progress increased.\n", GREEN);
         }
     }
 }
