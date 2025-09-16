@@ -27,22 +27,34 @@ long long Infect(long long infectiousness, long long infected, long long healthy
     return new_infected;
 }
 
-long long Kill(long long infected, int leathality, long long healthy, int severity) {
-    leathality += (int)(severity / 2);// severity can increse leathality by max of 50
-    double living_population = (double)infected + (double)healthy;
-    double expected = (leathality / 100.0) * infected * (infected / living_population);// scale deaths by leathality
-    double variation = (rand() % (infected + 1)) * ((infected * leathality) / living_population); // random 0..infected
-    long long to_die = (long)(expected * 0.8 + variation * 0.2);
-
-    if (infected > 100) {
-        if (to_die > infected / 4) {
-            return infected / 4;
-        }
-        else {
-            return to_die;
-        }
+long long Kill(long long infected, int lethality, long long healthy, int severity) {
+    if (infected <= 0) {
+        return 0;
     }
-    return infected;
+    double effective_lethality = lethality + (severity / 2.0);// severity can increse leathality by max of 50
+    effective_lethality = effective_lethality / 1.5;
+    double base_death_rate = effective_lethality / 100.0;
+    double living_population = (double)infected + (double)healthy;
+    double population_factor;
+    if (living_population > 0) {
+        population_factor = (double)infected / living_population;
+    }
+    else {
+        population_factor = 1.0;
+    }
+    double expected_deaths = infected * base_death_rate * population_factor;
+    double variation = (((double)rand() / RAND_MAX) * 0.4 - 0.2) * expected_deaths;// Add controlled random variation (+-20%)
+    long long to_die = (long long)(expected_deaths + variation);
+    // Cap deaths at 25% of infected per day
+    long long max_deaths = infected / 4;
+    if (to_die > max_deaths) {
+        to_die = max_deaths;
+    }
+    // Ensure we don't kill more than available
+    if (to_die > infected) {
+        to_die = infected;
+    }
+    return to_die;
 }
 
 void SetUpDisease(Disease* disease) {

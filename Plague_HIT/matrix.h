@@ -5,9 +5,10 @@
 
 int FindBiggest(long long healthy, long long sick, long long dead);
 
-void CreateMatrix(struct World* world);
-void FreeMatrix(int** matrix, int rows);
-void PrintMatrix(int** matrix, World* world);
+char** CreateMatrix(struct World* world);
+
+void FreeMatrix(char** matrix);
+void PrintMatrix(World* world);
 
 #endif
 

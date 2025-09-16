@@ -5,6 +5,7 @@
 #include "design.h"
 #include "disease.h"
 #include "world.h"
+#include "matrix.h"
 
 void print_region(const Regions* region) {
 	printf("%s\n", region->name);
@@ -207,8 +208,11 @@ void MonthLog(int day_counter, World* world, Regions* world_regions) {
     if (day_counter % 30 == 0) {
         Regions* current_region = world_regions;
         print_World(world);
-        PrintColored("Global Vaccine Research Progress: ", BLUE);
-        printf("%.1f%%\n", (world->vaccine_progress / 30.0));
+        //PrintMatrix(world);
+        if (world->disease_detected == 1) {
+            PrintColored("Global Vaccine Research Progress: ", BLUE);
+            printf("%.1f%%\n", (world->vaccine_progress / 30.0));
+        }
         while (current_region) {
             if (current_region->sick_people > 0) {
                 TriggerInfectOtherRegion(current_region, world_regions);
