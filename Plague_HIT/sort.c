@@ -37,7 +37,6 @@ AffectedRegions* SortAffectedRegions(Regions* world_regions) {
         affected_array[i].affected_percentage = RegionAffectedPopulation(world_regions);
 		world_regions = world_regions->next_region;
     }
-
     // Bubble sort: descending order by affected_percentage
     for (i = 0; i < 20; i++) {
         for (j = 0; j < 20 - i; j++) {
