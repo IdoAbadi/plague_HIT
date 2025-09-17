@@ -63,12 +63,12 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
             if (rng < 10) {
                 vaccine_progress_up(world);
                 PrintColored("There have been major breakthrough in vaccine development in ", GREEN);
-                printf("%s. \n", current_region->name);
+                printf("%s.\n", current_region->name);
             }
             else if (rng > 16) {
                 vaccine_progress_down(world);
                 PrintColored("Vaccine progress is going down because of lack of resources in ", ORANGE);
-                printf("%s. \n", current_region->name);
+                printf("%s.\n", current_region->name);
             }
         }
         else {
@@ -144,7 +144,7 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
         if (rng < 13) {
             plague_mutation(disease, mutation_enable);
             PrintColored("The disease has been mutated, new strain of the virus was found in ", RED);
-            printf("%s. \n", current_region->name);
+            printf("%s.\n", current_region->name);
         }
         else {
             PrintColored("No event this week in ", CYAN);
@@ -253,7 +253,7 @@ void Curfew(Regions* region, Disease* disease) {// might cut
 void anti_vaxxers(Regions* region, World* world) {// implemented
 	if (world->vaccine_progress < 10000) {
         world->vaccine_progress -= (int)((world->vaccine_progress * 3) / 100);
-        PrintColored("Anti-vaxxer movement in \n", RED);
+        PrintColored("Anti-vaxxer movement in ", RED);
         printf("%s", region->name);
         PrintColored(" decreased vaccine progress.\n", RED);
 	}
@@ -317,7 +317,7 @@ void public_opinion_mitigate(Regions* region, Disease* disease) {// implemented
         disease->infectiousness = (int)(disease->infectiousness * 0.85);
         PrintColored("Public in ", BLUE);
         printf("%s", region->name);
-        PrintColored(" are following regulations more closely\n", BLUE);
+        PrintColored(" are following regulations more closely.\n", BLUE);
     }
 }
 
@@ -539,7 +539,7 @@ void InfectRandomRegion(Regions* world_regions, Regions* exclude_region) {
                 curr->sick_people += 100;
                 PrintColored("Random infection event: A flight with an infected person has left ", ORANGE);
                 printf("%s", exclude_region->name);
-                PrintColored(" and arrived at", ORANGE);
+                PrintColored(" and arrived at ", ORANGE);
                 printf("%s.\n", curr->name);
                 break;
             }
