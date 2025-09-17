@@ -46,7 +46,7 @@ long long Infect(int infectiousness, long long infected, long long healthy) {
     return new_infections;
 }
 
-long long Kill(long long infected, int lethality, long long healthy, int severity) {
+long long Kill(long long infected, int lethality, long long healthy, int severity, int population_Density) {
     if (infected <= 0) {
         return 0;
     }
@@ -54,20 +54,38 @@ long long Kill(long long infected, int lethality, long long healthy, int severit
         return infected;
     }
     // Calculate effective lethality rate (0.0 - 1.0)
-    // Severity can increase lethality by up to 50%
-    double death_rate = (lethality + (severity / 2.0)) / 100.0;
-    // Calculate base deaths
-    double expected_deaths = infected * death_rate;
-    // Add random variation (±20%)
-    double random_factor = 0.8 + ((double)rand() / RAND_MAX) * 0.4;
-    long long deaths = (long long)(expected_deaths * random_factor);
-    // Apply caps:
-    // Cap deaths at 25% of infected per day
-    // 1. Cannot kill more than 25% of infected per day
-    if (deaths > infected / 4) {
-        deaths = infected / 4;
+    // Reduce severity impact from to 25%
+    double death_rate = (lethality + (severity / 4.0)) / 100.0;
+    double population_factor = 1.0;
+    // Scale down death rate for larger infected populations
+    if (infected > 1000000) {
+        population_factor = 0.85 * (population_Density / 10);
     }
-    // 2. Cannot kill more than total infected
+    if (infected > 10000000) {
+        population_factor = 0.7 * (population_Density / 10);
+    }
+    double expected_deaths = infected * death_rate * population_factor;
+    // Reduce random variation to ±10%
+    double random_factor = 0.9 + ((double)rand() / RAND_MAX) * 0.2;
+    long long deaths = (long long)(expected_deaths * random_factor);
+    // Apply stronger caps for lower lethality
+    if (lethality < 10) {
+        deaths = deaths / 10;
+    }
+    else if (lethality < 25) {
+        deaths = deaths / 7;
+    }
+    else if (lethality < 45) {
+        deaths = deaths / 4;
+    }
+    else if (lethality < 70){
+        deaths = deaths / 2;
+    }
+    // Cap deaths at 20% of infected per day (reduced from 25%)
+    if (deaths > infected / 5) {
+        deaths = infected / 5;
+    }
+    // Cannot kill more than total infected
     if (deaths > infected) {
         deaths = infected;
     }

@@ -45,12 +45,13 @@ void StartDisease(Regions* world_regions, char chosen_region[50]);
 void SelectDiseaseOrigin(Regions* world_regions, int continent);
 void InfectRandomRegion(Regions* world_regions, Regions* exclude_region);
 void TriggerInfectOtherRegion(Regions* current_region, Regions* world_regions);
-void PrintDetectionLog(double infection_rate, double death_rate, Regions* region);
+void PrintInitialDetectionLog(double infection_rate, double death_rate, Regions* region);
 void SetUpInvestment(World* world, Regions* world_regions);
 void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* world);
 void MonthLog(int day_counter, World* world, Regions* world_regions);
 void ApplyCure(Regions* region);
 void Cure(Disease* disease, World* world, Regions* current_region);
+void PrintMonthlySpreadLog(World* world);
 
 double CalculateRegionResearch(struct Regions* region, struct Disease* disease);
 

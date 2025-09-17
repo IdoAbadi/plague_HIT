@@ -85,16 +85,32 @@ void ChooseSimpleEvent(Regions* current_region, Disease* disease, World* world, 
                             anti_vaxxers(current_region, world);
                             break;
                         }
+                        else {
+                            PrintColored("No event this week in ", CYAN);
+                            printf("%s.\n", current_region->name);
+                        }
                     }
                     if (rng > 13) {
                         anti_vaxxers(current_region, world);
                         break;
+                    }
+                    else {
+                        PrintColored("No event this week in ", CYAN);
+                        printf("%s.\n", current_region->name);
                     }
                 }
                 if (rng > 16) {
                     anti_vaxxers(current_region, world);
                     break;
                 }
+                else {
+                    PrintColored("No event this week in ", CYAN);
+                    printf("%s.\n", current_region->name);
+                }
+            }
+            else {
+                PrintColored("No event this week in ", CYAN);
+                printf("%s.\n", current_region->name);
             }
         }
 		else {
@@ -155,17 +171,13 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             current_region->healthy_people -= new_infected;
             current_region->sick_people += new_infected;
         }
-
         if (current_region->sick_people < 0) {
             current_region->sick_people = 0;
         }
         else {// only enter if country is infected (sick_people > 0)
-            long long new_deceased = Kill(current_region->sick_people, disease->lethality, current_region->healthy_people, disease->severity);
+            long long new_deceased = Kill(current_region->sick_people, disease->lethality, current_region->healthy_people, disease->severity, current_region->population_density);
             current_region->sick_people -= new_deceased;
             current_region->dead_people += new_deceased;
-            if (current_region->sick_people > 0 && world->disease_detected == 0) {
-                DiseaseDetected(current_region, disease, world, world_regions); 
-            }
             // Calculate research progress if disease is detected
             if (world->disease_detected == 1 && current_region->sick_people > 0) {
                 double region_research = CalculateRegionResearch(current_region, disease);
@@ -195,6 +207,9 @@ void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* 
         PrintColored("week ", ORANGE);
         printf("%d:\n", week_num);
         while (current_region) {
+            if (current_region->sick_people > 0 && world->disease_detected == 0) {
+                DiseaseDetected(current_region, disease, world, world_regions);
+            }
             if (current_region->sick_people > 0) {
                 ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
                 Sleep(500);
@@ -210,8 +225,7 @@ void MonthLog(int day_counter, World* world, Regions* world_regions) {
         print_World(world);
         PrintMatrix(world);
         if (world->disease_detected == 1) {
-            PrintColored("Global Vaccine Research Progress: ", BLUE);
-            printf("%.1f%%\n", (world->vaccine_progress / 30.0));
+            PrintMonthlySpreadLog(world);
         }
         while (current_region) {
             if (current_region->sick_people > 0) {
@@ -560,30 +574,30 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
             PrintColored("URGENT: Extremely infectious and lethal disease detected in ", RED);
             printf("%s!\n", region->name);
             Sleep(500);
-            PrintDetectionLog(infection_rate, death_rate, region);
+            PrintInitialDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
             ClosingBorders(region, disease);
         }
-        else if (spread_risk > 0.15 || death_rate > 0.16) {
+        else if (spread_risk > 0.15 || death_rate > 0.15) {
             world->disease_detected = 1;
             PrintColored("URGENT: Highly infectious or lethal disease detected in ", RED);
             printf("%s!\n", region->name);
             Sleep(500);
-            PrintDetectionLog(infection_rate, death_rate, region);
+            PrintInitialDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
         }
-        else if (spread_risk > 0.1 || death_rate > 0.08) {
+        else if (spread_risk > 0.1 || death_rate > 0.1) {
             world->disease_detected = 1;
             PrintColored("WARNING: Disease outbreak detected in ", ORANGE);
             printf("%s!\n", region->name);
             Sleep(500);
-            PrintDetectionLog(infection_rate, death_rate, region);
+            PrintInitialDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
         }
     }
 }
 
-void PrintDetectionLog(double infection_rate, double death_rate, Regions* region) {
+void PrintInitialDetectionLog(double infection_rate, double death_rate, Regions* region) {
     PrintColored("Initial Analysis:\n", PINK);
     printf("Infection Rate: %.2f%%\n", infection_rate * 100);
     printf("Death Rate: %.2f%%\n", death_rate * 100);
@@ -592,6 +606,25 @@ void PrintDetectionLog(double infection_rate, double death_rate, Regions* region
 
     //PrintColored("Research begins in ", BLUE);
     //printf("%s \n", region->name);
+}
+
+void PrintMonthlySpreadLog(World* world) {
+    //calculation
+    double total_population = (double)(world->healthy_people + world->sick_people + world->dead_people);
+    // Calculate % of population infected
+    double infection_rate = (double)world->sick_people / total_population;
+    // Calculate death rate (% of infected who died)
+    double death_rate = 0.0;
+    if (world->sick_people + world->dead_people > 0) {
+        death_rate = (double)world->dead_people / (world->sick_people + world->dead_people);
+    }
+    PrintColored("\nMonthly world Analysis:\n", PINK);
+    PrintColored("Infection Rate: ", CYAN);
+    printf(" % .2f % %\n", infection_rate * 100);
+    PrintColored("Death Rate: ", CYAN);
+    printf("% .2f % %\n", death_rate * 100);
+    PrintColored("Global Vaccine Research Progress: ", BLUE);
+    printf("%.1f%%\n\n", (world->vaccine_progress / 30.0));
 }
 
 // Add this new function to calculate research contribution from a region
