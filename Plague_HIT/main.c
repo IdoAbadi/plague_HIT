@@ -25,7 +25,7 @@ void main() {
     CloseRegionDataFile(Region_Data);
     UpdateWorld(&world, world_regions);
     Regions* world_regions_copy = world_regions;// precaution to not run up nested loops
-    while (world.sick_people >= 0 || world.disease_cured == 1)
+    while ((world.sick_people > 0 && !world.disease_cured) && (world.healthy_people + world.sick_people > 0))
     {
         Regions* current_region = world_regions; // precaution to not run up nested loops
         DayLoop(current_region, &disease, &world, day_counter, world_regions_copy);

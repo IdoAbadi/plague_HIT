@@ -16,5 +16,5 @@ void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world
 Regions* AllocateRegions(int regions_amount);
 
 FILE* OpenRegionData();
-FILE* OpenEndLog(char* filename[100]);
+FILE* OpenEndLog(const char* filename);
 #endif

@@ -136,12 +136,14 @@ void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world
 	fclose(EndLog);
 }
 
-FILE* OpenEndLog(char* filename[100]) {
-	strcat_s(filename, sizeof(filename), ".txt"); 
-	FILE* EndLog = fopen(filename, "w");
-	if (EndLog == NULL) {
-		printf("Error opening end log file.\n");
-		return NULL;
-	}
-	return EndLog;
+FILE* OpenEndLog(const char* filename) {
+    char fileN[100];
+    strcpy_s(fileN, sizeof(fileN), filename);
+    strcat_s(fileN, sizeof(fileN), ".txt");
+    FILE* EndLog = fopen(fileN, "w");
+    if (EndLog == NULL) {
+        printf("Error opening end log file.\n");
+        return NULL;
+    }
+    return EndLog;
 }

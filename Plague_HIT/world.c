@@ -544,7 +544,16 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
         // Factor in population density for spread risk
         double spread_risk = infection_rate * (region->population_density / 10.0);
         // Adjust research investment based on spread risk and death rate
-        if (spread_risk > 0.15 || death_rate > 0.5) {
+        if (death_rate > 0.3 || (spread_risk > 0.2 && death_rate > 0.25)) {
+            world->disease_detected = 1;
+            PrintColored("URGENT: Extremely infectious and lethal disease detected in ", RED);
+            printf("%s!\n", region->name);
+            Sleep(500);
+            PrintDetectionLog(infection_rate, death_rate, region);
+            Sleep(500);
+            ClosingBorders(region, disease);
+        }
+        else if (spread_risk > 0.15 || death_rate > 0.16) {
             world->disease_detected = 1;
             PrintColored("URGENT: Highly infectious or lethal disease detected in ", RED);
             printf("%s!\n", region->name);
@@ -552,23 +561,13 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
             PrintDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
         }
-        else if (spread_risk > 0.1 || death_rate > 0.3) {
+        else if (spread_risk > 0.1 || death_rate > 0.08) {
             world->disease_detected = 1;
             PrintColored("WARNING: Disease outbreak detected in ", ORANGE);
             printf("%s!\n", region->name);
             Sleep(500);
             PrintDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
-        }
-
-        // If highly dangerous, trigger immediate response
-        if (death_rate > 0.65 || (spread_risk > 0.25 && death_rate > 0.5)) {
-            PrintColored("URGENT: Extremely infectious and lethal disease detected in ", RED);
-            printf("%s!\n", region->name);
-            Sleep(500);
-            PrintDetectionLog(infection_rate, death_rate, region);
-            Sleep(500);
-            ClosingBorders(region, disease);
         }
     }
 }

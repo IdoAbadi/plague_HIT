@@ -53,13 +53,8 @@ AffectedRegions* SortAffectedRegions(Regions* world_regions) {
 }
 
 void SaveAffectedRegionListToFile(AffectedRegions* affected_array, FILE* file) {
-    //FILE* file = fopen("FileFuncs.txt", "w");
-  /*  if (file == NULL) {
-        printf("Error opening file for writing.\n");
-        return;
-	}*/
     for (int i = 0; i < 21; i++) {
-        fprintf(file, "Region: %s, Affected Percentage: %d%%\n", affected_array->name, affected_array->affected_percentage);
+        fprintf(file, "Region: %s, Affected Percentage: %d%%\n", affected_array[i].name, affected_array[i].affected_percentage);
     }
 	fclose(file);
 }

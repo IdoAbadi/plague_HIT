@@ -16,57 +16,62 @@ void PrintDisease(const Disease* disease) {
 }
 
 long long Infect(int infectiousness, long long infected, long long healthy) {
+    // Return early if no healthy population to infect
+    if (healthy <= 0) {
+        return 0;
+    }
     // Base infection rate (0.0 - 1.0)
     double infection_rate = infectiousness / 100.0;
-    
     // Calculate expected infections
     double expected = infection_rate * infected;
-    
     // Add controlled random variation (±30%)
-    double random_factor = 0.7 + ((double)rand() / RAND_MAX) * 0.6;
-    long long new_infected = (long long)(expected * random_factor);
-    
-    // Cap at available healthy population
-    if (new_infected > (healthy / 4) && healthy > 100000) {
-        new_infected = (healthy / 4);
+    double random_factor = 0.8 + ((double)rand() / RAND_MAX) * 0.4;
+    long long new_infections = (long long)(expected * random_factor);
+    // Apply population-based limits:
+    // Handle small populations differently
+    if (healthy < 1000) {
+        new_infections = healthy; // Infect all remaining people
     }
-    else if ( healthy < 1000) {
-        new_infected = healthy;
+    // For large populations, limit daily infection rate
+    else if (healthy > 100000) {
+        // Cannot infect more than 25% of healthy population per day
+        if (new_infections > healthy / 4) {
+            new_infections = healthy / 4;
+        }
     }
-    return new_infected;
+    // Final safety check: can't infect more than available healthy people
+    if (new_infections > healthy) {
+        new_infections = healthy;
+    }
+    return new_infections;
 }
 
 long long Kill(long long infected, int lethality, long long healthy, int severity) {
     if (infected <= 0) {
         return 0;
     }
-    else if (infected < 10) {
+    else if (infected < 10000 && healthy == 0) {
         return infected;
     }
-    double effective_lethality = lethality + (severity / 2.0);// severity can increse leathality by max of 50
-    effective_lethality = effective_lethality / 1.5;
-    double base_death_rate = effective_lethality / 100.0;
-    double living_population = (double)infected + (double)healthy;
-    double population_factor;
-    if (living_population > 0) {
-        population_factor = (double)infected / living_population;
-    }
-    else {
-        population_factor = 1.0;
-    }
-    double expected_deaths = infected * base_death_rate * population_factor;
-    double variation = (((double)rand() / RAND_MAX) * 0.4 - 0.2) * expected_deaths;// Add controlled random variation (+-20%)
-    long long to_die = (long long)(expected_deaths + variation);
+    // Calculate effective lethality rate (0.0 - 1.0)
+    // Severity can increase lethality by up to 50%
+    double death_rate = (lethality + (severity / 2.0)) / 100.0;
+    // Calculate base deaths
+    double expected_deaths = infected * death_rate;
+    // Add random variation (±20%)
+    double random_factor = 0.8 + ((double)rand() / RAND_MAX) * 0.4;
+    long long deaths = (long long)(expected_deaths * random_factor);
+    // Apply caps:
     // Cap deaths at 25% of infected per day
-    long long max_deaths = infected / 4;
-    if (to_die > max_deaths) {
-        to_die = max_deaths;
+    // 1. Cannot kill more than 25% of infected per day
+    if (deaths > infected / 4) {
+        deaths = infected / 4;
     }
-    // Ensure we don't kill more than available
-    if (to_die > infected) {
-        to_die = infected;
+    // 2. Cannot kill more than total infected
+    if (deaths > infected) {
+        deaths = infected;
     }
-    return to_die;
+    return deaths;
 }
 
 void SetUpDisease(Disease* disease) {
