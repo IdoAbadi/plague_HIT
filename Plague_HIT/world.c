@@ -280,22 +280,30 @@ void vaccine_progress_down(World* world) { // implemented
 void public_opinion_escalate(Regions* region, Disease* disease) { // implemented
     if (disease->infectiousness > 40) {
         disease->infectiousness = (int)(disease->infectiousness * 1.04);
-        printf("Public in %s dont follow regulations\n", region->name);
+        PrintColored("Public in ", YELLOW);
+        printf("%s", region->name); 
+        PrintColored(" dont follow regulations\n", YELLOW);
     }
     else {
         disease->infectiousness = (int)(disease->infectiousness * 1.1);
-        printf("Public in %s dont follow regulations\n", region->name);
+        PrintColored("Public in ", YELLOW);
+        printf("%s", region->name);
+        PrintColored(" dont follow regulations\n", YELLOW);
     }
 }
 
 void public_opinion_mitigate(Regions* region, Disease* disease) {// implemented
     if (disease->infectiousness > 40) {
         disease->infectiousness = (int)(disease->infectiousness * 0.95);
-        printf("Public in %s are following regulations more closely\n", region->name);
+        PrintColored("Public in ", BLUE);
+        printf("%s", region->name); 
+        PrintColored(" are following regulations more closely\n", BLUE);
     }
     else {
         disease->infectiousness = (int)(disease->infectiousness * 0.85);
-        printf("Public in %s are following regulations more closely\n", region->name);
+        PrintColored("Public in ", BLUE);
+        printf("%s", region->name);
+        PrintColored(" are following regulations more closely\n", BLUE);
     }
 }
 
@@ -515,7 +523,10 @@ void InfectRandomRegion(Regions* world_regions, Regions* exclude_region) {
                 // Infect this region 
                 curr->healthy_people -= 100;
                 curr->sick_people += 100;
-                printf("Random infection event: A flight with an infected person has left %s and arrived at %s .\n", exclude_region->name , curr->name);
+                PrintColored("Random infection event: A flight with an infected person has left ", ORANGE);
+                printf("%s", exclude_region->name);
+                PrintColored(" and arrived at", ORANGE);
+                printf("%s.\n", curr->name);
                 break;
             }
             target--;
