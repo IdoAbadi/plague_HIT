@@ -24,16 +24,17 @@ void main() {
     ClearConsole();
     CloseRegionDataFile(Region_Data);
     UpdateWorld(&world, world_regions);
+    Regions* world_regions_copy = world_regions;// precaution to not run up nested loops
     while (world.sick_people >= 0 || world.disease_cured == 1)
     {
-        Regions* current_region = world_regions; // precaution to not run up loop
-        Regions* world_regions_copy = world_regions;
+        Regions* current_region = world_regions; // precaution to not run up nested loops
         DayLoop(current_region, &disease, &world, day_counter, world_regions_copy);
         WeekLoop(day_counter, world_regions_copy, &disease, &world);
         SetUpInvestment(&world, world_regions_copy);
         MonthLog(day_counter, &world, world_regions_copy);
         day_counter++;
     }
+    PrintEndLog(&disease, &world, day_counter, world_regions_copy);
     printf("end");
     freeRegions(world_regions);
 }

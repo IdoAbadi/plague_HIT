@@ -4,6 +4,7 @@
 #include "FileFuncs.h"
 #include "world.h"
 #include "disease.h"
+#include "sort.h"
 
 FILE* OpenRegionData() {
 	FILE* RegionData = fopen("RegionsData.txt", "r");
@@ -86,26 +87,61 @@ void freeRegions(Regions* world_regions) {
 	}
 }
 
-void PrintEndLog(Disease* disease, World* world) { 
+void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world_regions) { 
 	FILE* EndLog = OpenEndLog(disease->name); //function that returns a file pointer
 	if (EndLog == NULL) {
 		printf("Error opening end log file.\n");
 		return;
 	}
-	fputs("-----End of Simulation-----\n", EndLog);
+	fputs("-----End of Simulation Log-----\n", EndLog);
+	if (world->disease_detected == 0 && world->healthy_people <= 0) {
+		printf("%s hasn't been detected.\n", disease->name);
+		fprintf(EndLog,"%s hasn't been detected.\n", disease->name);
+		printf("%s has rampaged around the world for %d days.\n", disease->name, day_counter);
+		fprintf(EndLog,"%s has rampaged around the world for %d days.\n", disease->name, day_counter);
+		printf("The entire world population has died from the disease.\n");
+		fprintf(EndLog,"The entire world population has died from the disease.\n");
+		printf("This log was also saved to the file %s.txt", disease->name);
+	}
+	else if (world->disease_detected == 0 && world->healthy_people >= 0) {
+		printf("%s hasn't been detected.\n", disease->name);
+		fprintf(EndLog, "%s hasn't been detected.\n", disease->name);
+		printf("%s has rampaged around the world for %d days.\n", disease->name, day_counter);
+		fprintf(EndLog, "%s has rampaged around the world for %d days.\n", disease->name, day_counter);
+		printf("Eventually The disease killed itself\n");
+		fprintf(EndLog,"Eventually The disease killed itself\n");
+		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
+		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
+		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
+	}
+	else if (world->disease_detected == 1 && world->disease_cured == 0) {
+		printf("%s hasn been detected.\n", disease->name);
+		fprintf(EndLog, "%s hasn been detected.\n", disease->name);
+		printf("%s has rampaged around the world for %d days but wasn't stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
+		fprintf(EndLog, "%s has rampaged around the world for %d daysbut wasn't stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
+
+		// the disease was detected but not cured add missing text
+		// cure progression
+		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
+		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
+		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
+	}
+	else if (world->disease_detected == 1 && world->disease_cured == 1) {
+		//fill like above
+
+		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
+		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
+		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
+	}
 	fclose(EndLog);
 }
 
-FILE* OpenEndLog(char* filename) {
-	char fullname[200];
-	strncpy_s(fullname, sizeof(fullname), filename, _TRUNCATE); // copy disease name
-	strcat_s(fullname, sizeof(fullname), ".txt"); // add .txt
-	
-	FILE* EndLog = fopen(fullname, "a");
+FILE* OpenEndLog(char* filename[100]) {
+	strcat_s(filename, sizeof(filename), ".txt"); 
+	FILE* EndLog = fopen(filename, "w");
 	if (EndLog == NULL) {
 		printf("Error opening end log file.\n");
 		return NULL;
 	}
-	fputs("----New simulation Log Started----\n", EndLog);
 	return EndLog;
 }

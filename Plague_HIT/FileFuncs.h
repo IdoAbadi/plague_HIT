@@ -11,11 +11,10 @@ void GetRegionInfo(FILE* RegionData, Regions* region);
 void CloseRegionDataFile(FILE* RegionData);
 void SetRegionsParams(Regions* start_region, FILE* Region_Data);
 void freeRegions(Regions* world_regions);
-void PrintEndLog(Disease* disease, World* world);
+void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world_regions);
 
 Regions* AllocateRegions(int regions_amount);
 
 FILE* OpenRegionData();
-
-FILE* OpenEndLog(char* filename);
+FILE* OpenEndLog(char* filename[100]);
 #endif

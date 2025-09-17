@@ -8,8 +8,10 @@ typedef struct AffectedRegions {
 }AffectedRegions;
 
 int RegionAffectedPopulation(Regions* current_region);
+
 AffectedRegions* SortAffectedRegions(Regions* world_regions);
-void SaveToFile(AffectedRegions* affected_array);
+
+void SaveAffectedRegionListToFile(AffectedRegions* affected_array, FILE* file);
 void AppendToFile(AffectedRegions* affected_array);
 
 
