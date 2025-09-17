@@ -119,16 +119,19 @@ void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world
 		fprintf(EndLog, "%s hasn been detected.\n", disease->name);
 		printf("%s has rampaged around the world for %d days but wasn't stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
 		fprintf(EndLog, "%s has rampaged around the world for %d daysbut wasn't stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
-
-		// the disease was detected but not cured add missing text
-		// cure progression
+		printf("Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n");
+		fprintf(EndLog, "Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n");
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
 		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
 	}
 	else if (world->disease_detected == 1 && world->disease_cured == 1) {
-		//fill like above
-
+		printf("%s has been detected.\n", disease->name);
+		fprintf(EndLog, "%s has been detected.\n", disease->name);
+		printf("%s has rampaged around the world for %d days but was eventually contained and cured.\n", disease->name, day_counter);
+		fprintf(EndLog, "%s has rampaged around the world for %d days but was eventually contained and cured.\n", disease->name, day_counter);
+		printf("Thanks to global cooperation and rapid medical advancements, humanity managed to develop a cure and eradicate the disease.\n");
+		fprintf(EndLog, "Thanks to global cooperation and rapid medical advancements, humanity managed to develop a cure and eradicate the disease.\n");
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
 		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
