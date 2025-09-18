@@ -140,31 +140,6 @@ int HowLeathal(int tmp) {
     }
 }
 
-/*void plague_mutation(Disease* disease) {//incorrect need to fix
-    if (disease->infectiousness >= 100) {
-        return; // No mutations if already max infectiousness
-    }
-
-    int param = rand() % 3;        
-	int change = (rand() % 11) - 5;  // From -5 to 5
-
-    if (param == 0) {
-        disease->infectiousness += change;
-        if (disease->infectiousness < 1)   disease->infectiousness = 1;
-        if (disease->infectiousness > 100) disease->infectiousness = 100;
-    }
-    else if (param == 1) {
-        disease->severity += change;
-        if (disease->severity < 1)   disease->severity = 1;
-        if (disease->severity > 100) disease->severity = 100;
-    }
-    else { // param == 2
-        disease->lethality += change;
-        if (disease->lethality < 1)   disease->lethality = 1;
-        if (disease->lethality > 100) disease->lethality = 100;
-    }
-}*/
-
 void mutate_infectiousness(Disease* disease) {
     if (disease->infectiousness >= 100) {
         return; // No mutations if already at max
@@ -243,4 +218,17 @@ int ChooseContinent() {
 void clean_input_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF) {}
+}
+
+void PrintEndDiseaseStats(World* world, Disease* disease) {
+    if (world->disease_cured == 1) {
+        PrintColored("\n=== DISEASE ERADICATED! CONGRATULATIONS! ===\n", GREEN);
+    }
+    else {
+        PrintColored("\n=== GAME OVER! THE DISEASE HAS ELIMINATED HUMANITY! ===\n", RED);
+	}
+    PrintColored("Final World Status:\n", BLUE);
+    printf("Infectiousness: %d\n", disease->infectiousness);
+    printf("Severity: %d\n", disease->severity);
+    printf("Lethality: %d\n", disease->lethality);
 }
