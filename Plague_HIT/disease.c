@@ -29,15 +29,19 @@ long long Infect(int infectiousness, long long infected, long long healthy) {
     long long new_infections = (long long)(expected * random_factor);
     // Apply population-based limits:
     // Handle small populations differently
-    if (healthy < 1000) {
-        new_infections = healthy; // Infect all remaining people
-    }
-    // For large populations, limit daily infection rate
-    else if (healthy > 100000) {
-        // Cannot infect more than 25% of healthy population per day
-        if (new_infections > healthy / 4) {
-            new_infections = healthy / 4;
+    if (healthy > 10000000) {// Cannot infect more than 5% of healthy population per day
+        if (new_infections > healthy / 20) {
+            new_infections = healthy / 20;
         }
+    }
+    else if (healthy > 100000) {
+        // Cannot infect more than 10% of healthy population per day
+        if (new_infections > healthy / 10) {
+            new_infections = healthy / 10;
+        }
+    }
+    else if (healthy < 1000) {
+        new_infections = healthy; // Infect all remaining people
     }
     // Final safety check: can't infect more than available healthy people
     if (new_infections > healthy) {
@@ -53,16 +57,22 @@ long long Kill(long long infected, int lethality, long long healthy, int severit
     else if (infected < 10000 && healthy == 0) {
         return infected;
     }
+    else if (infected < 10) {
+        return infected;
+    }
     // Calculate effective lethality rate (0.0 - 1.0)
     // Reduce severity impact from to 25%
     double death_rate = (lethality + (severity / 4.0)) / 100.0;
     double population_factor = 1.0;
     // Scale down death rate for larger infected populations
-    if (infected > 1000000) {
-        population_factor = 0.85 * (population_Density / 10);
+    if (infected > 100000) {
+        population_factor = 0.7 * ((double)population_Density / 10.0);
     }
-    if (infected > 10000000) {
-        population_factor = 0.7 * (population_Density / 10);
+    else if (infected > 5000000) {
+        population_factor = 0.5 * ((double)population_Density / 10.0);
+    }
+    else if ((infected > 50000000)) {
+        population_factor = 0.3 * ((double)population_Density / 10.0);
     }
     double expected_deaths = infected * death_rate * population_factor;
     // Reduce random variation to ±10%
@@ -70,20 +80,20 @@ long long Kill(long long infected, int lethality, long long healthy, int severit
     long long deaths = (long long)(expected_deaths * random_factor);
     // Apply stronger caps for lower lethality
     if (lethality < 10) {
-        deaths = deaths / 10;
+        deaths = (long long)(deaths / 10);
     }
     else if (lethality < 25) {
-        deaths = deaths / 7;
+        deaths = (long long)(deaths / 8);
     }
-    else if (lethality < 45) {
-        deaths = deaths / 4;
+    else if (lethality < 50) {
+        deaths = (long long)(deaths / 5);
     }
-    else if (lethality < 70){
-        deaths = deaths / 2;
+    else if (lethality < 75){
+        deaths = (long long)(deaths / 3);
     }
-    // Cap deaths at 20% of infected per day (reduced from 25%)
-    if (deaths > infected / 5) {
-        deaths = infected / 5;
+    // Cap deaths at 25% of infected per day (reduced from 25%)
+    if (deaths > infected / 4) {
+        deaths = infected / 4;
     }
     // Cannot kill more than total infected
     if (deaths > infected) {
@@ -184,12 +194,12 @@ void mutate_lethality(Disease* disease) {
 
 void plague_mutation(Disease* disease, int* enable) {
     if (enable != NULL && *enable == 1) {
-        int param = rand() % 3; // Randomly choose which parameter to mutate
-        if (param == 0) {
+        int param = rand() % 9; // Randomly choose which parameter to mutate
+        if (param < 2) {
             mutate_infectiousness(disease);
             *enable = 0;
         }
-        else if (param == 1) {
+        else if (param < 5) {
             mutate_severity(disease);
             *enable = 0;
         }

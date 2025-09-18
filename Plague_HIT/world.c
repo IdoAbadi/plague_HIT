@@ -175,7 +175,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
             current_region->sick_people = 0;
         }
         else {// only enter if country is infected (sick_people > 0)
-            if (day_counter > 5) {// no deaths in first 5 days
+            if (day_counter > 3) {// no deaths in first 3 days
                 long long new_deceased = Kill(current_region->sick_people, disease->lethality, current_region->healthy_people, disease->severity, current_region->population_density);
                 current_region->sick_people -= new_deceased;
                 current_region->dead_people += new_deceased;
@@ -209,7 +209,9 @@ void WeekLoop(int day_counter, Regions* world_regions, Disease* disease, World* 
         printf("%d:\n", week_num);
         while (current_region) {
             if (current_region->sick_people > 0 && world->disease_detected == 0) {
-                DiseaseDetected(current_region, disease, world, world_regions);
+                if (day_counter > 15) {// cant detect in first 2 weeks
+                    DiseaseDetected(current_region, disease, world, world_regions);
+                }
             }
             if (current_region->sick_people > 0) {
                 ChooseSimpleEvent(current_region, disease, world, &mutation_enable);
@@ -231,7 +233,7 @@ void MonthLog(int day_counter, World* world, Regions* world_regions) {
         while (current_region) {
             if (current_region->sick_people > 0) {
                 TriggerInfectOtherRegion(current_region, world_regions);
-                Sleep(1000);
+                Sleep(300);
             }
             current_region = current_region->next_region;
         }
@@ -572,16 +574,16 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
         // Factor in population density for spread risk
         double spread_risk = infection_rate * (region->population_density / 10.0);
         // Adjust research investment based on spread risk and death rate
-        if (death_rate > 0.35 || (spread_risk > 0.45 && death_rate > 0.25)) {
+        if (death_rate > 0.55 || (spread_risk > 0.45 && death_rate > 0.45)) {
             world->disease_detected = 1;
             PrintColored("\nURGENT: Extremely infectious and lethal disease detected in ", RED);
             printf("%s!\n\n", region->name);
             Sleep(500);
-            PrintInitialDetectionLog(spread_risk, death_rate, region);// more accurate to pass spread risk
+            PrintInitialDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
             ClosingBorders(region, disease);
         }
-        else if (spread_risk > 0.3 || death_rate > 0.2) {
+        else if (spread_risk > 0.35 || death_rate > 0.35) {
             world->disease_detected = 1;
             PrintColored("\nURGENT: Highly infectious or lethal disease detected in ", RED);
             printf("%s!\n\n", region->name);
@@ -589,7 +591,7 @@ void DiseaseDetected(Regions* region, Disease* disease, World* world, Regions* w
             PrintInitialDetectionLog(infection_rate, death_rate, region);
             Sleep(500);
         }
-        else if (spread_risk > 0.20 || death_rate > 0.15) {
+        else if (spread_risk > 0.25 || death_rate > 0.25) {
             world->disease_detected = 1;
             PrintColored("\nWARNING: Disease outbreak detected in ", ORANGE);
             printf("%s!\n\n", region->name);
@@ -641,19 +643,19 @@ double CalculateRegionResearch(Regions* region, Disease* disease) {
     // Add research from sick people if disease isn't too severe
     if (disease->severity < 30 && region->sick_people > 0) {
         double sick_ratio = (double)region->sick_people / total_population;
-        research_power += (sick_ratio * region->research_resources * 0.9); // Sick people research at 90% efficiency
+        research_power += (sick_ratio * region->research_resources * 0.85); // Sick people research at 90% efficiency
     }
     else if (disease->severity < 50 && region->sick_people > 0) {
         double sick_ratio = (double)region->sick_people / total_population;
-        research_power += (sick_ratio * region->research_resources * 0.75); // Sick people research at 75% efficiency
+        research_power += (sick_ratio * region->research_resources * 0.7); // Sick people research at 75% efficiency
     }
     else if (disease->severity < 70 && region->sick_people > 0) {
         double sick_ratio = (double)region->sick_people / total_population;
-        research_power += (sick_ratio * region->research_resources * 0.6); // Sick people research at 60% efficiency
+        research_power += (sick_ratio * region->research_resources * 0.55); // Sick people research at 60% efficiency
     }
     else if (disease->severity < 90 && region->sick_people > 0) {
         double sick_ratio = (double)region->sick_people / total_population;
-        research_power += (sick_ratio * region->research_resources * 0.5); // Sick people research at 60% efficiency
+        research_power += (sick_ratio * region->research_resources * 0.4); // Sick people research at 60% efficiency
     }
     else {
         double sick_ratio = (double)region->sick_people / total_population;
