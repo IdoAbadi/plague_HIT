@@ -52,6 +52,7 @@ void MonthLog(int day_counter, World* world, Regions* world_regions);
 void ApplyCure(Regions* region);
 void Cure(Disease* disease, World* world, Regions* current_region);
 void PrintMonthlySpreadLog(World* world);
+void PrintEndDiseaseStats(World* world, Disease* disease);
 
 double CalculateRegionResearch(struct Regions* region, struct Disease* disease);
 

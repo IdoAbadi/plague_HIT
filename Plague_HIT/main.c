@@ -34,6 +34,7 @@ void main() {
         MonthLog(day_counter, &world, world_regions_copy);
         day_counter++;
     }
+    PrintEndDiseaseStats(&world, &disease);
     PrintEndLog(&disease, &world, day_counter, world_regions_copy);
     printf("end");
     freeRegions(world_regions);

@@ -727,4 +727,15 @@ void Cure(Disease* disease, World* world, Regions* current_region) {
     }
 }
 
-
+void PrintEndDiseaseStats(World* world, Disease* disease) {
+    if (world->disease_cured == 1) {
+        PrintColored("\n=== DISEASE ERADICATED! CONGRATULATIONS! ===\n", GREEN);
+    }
+    else {
+        PrintColored("\n=== GAME OVER! THE DISEASE HAS ELIMINATED HUMANITY! ===\n", RED);
+    }
+    PrintColored("Final World Status:\n", BLUE);
+    printf("Infectiousness: %d\n", disease->infectiousness);
+    printf("Severity: %d\n", disease->severity);
+    printf("Lethality: %d\n", disease->lethality);
+}
