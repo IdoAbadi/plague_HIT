@@ -18,7 +18,7 @@ void PrintColored(const char* text, const char* color_code) {
 
 void PrintWelcomeMessage() {
     PrintColored("===============================================================================================================\n", YELLOW);
-    PrintColored("                                    Welcome to Plague H.I.T!\n", BLUE);
+    PrintColored("                                          Welcome to Plague H.I.T!\n", BLUE);
     PrintColored("===============================================================================================================\n", YELLOW);
     PrintColored("                    A simulation of survival, strategy, and the unstoppable spread of disease.\n", BLUE);
     PrintColored("===============================================================================================================\n", YELLOW);
