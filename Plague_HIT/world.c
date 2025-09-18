@@ -724,3 +724,5 @@ void Cure(Disease* disease, World* world, Regions* current_region) {
         ApplyCure(current_region);
     }
 }
+
+

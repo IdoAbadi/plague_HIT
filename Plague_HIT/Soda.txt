@@ -1,0 +1,25 @@
+-----End of Simulation Log-----
+Soda has been detected.
+Soda has rampaged around the world for 618 days but was eventually contained and cured.
+Thanks to global cooperation and rapid medical advancements, humanity managed to develop a cure and eradicate the disease.
+Region: Western Europe, Affected Percentage: 75%
+Region: Sub-Saharan Africa, Affected Percentage: 75%
+Region: Southeast Asia, Affected Percentage: 75%
+Region: United States & Canada, Affected Percentage: 0%
+Region: Latin America, Affected Percentage: 0%
+Region: Central America, Affected Percentage: 0%
+Region: Caribbean, Affected Percentage: 0%
+Region: United Kingdom, Affected Percentage: 0%
+Region: Eastern Europe, Affected Percentage: 0%
+Region: Russia, Affected Percentage: 0%
+Region: North Africa, Affected Percentage: 0%
+Region: Middle East, Affected Percentage: 0%
+Region: South Asia, Affected Percentage: 0%
+Region: India, Affected Percentage: 0%
+Region: China, Affected Percentage: 0%
+Region: Hong Kong and Macau, Affected Percentage: 0%
+Region: Japan, Korea, and Taiwan, Affected Percentage: 0%
+Region: Small Pacific nations, Affected Percentage: 0%
+Region: Australia, Affected Percentage: 0%
+Region: New Zealand, Affected Percentage: 0%
+Region: Central Asia, Affected Percentage: 0%

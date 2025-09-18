@@ -5,6 +5,7 @@
 #include "world.h"
 #include "disease.h"
 #include "sort.h"
+#include "design.h"
 
 FILE* OpenRegionData() {
 	FILE* RegionData = fopen("RegionsData.txt", "r");
@@ -95,42 +96,58 @@ void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world
 	}
 	fputs("-----End of Simulation Log-----\n", EndLog);
 	if (world->disease_detected == 0 && world->healthy_people <= 0) {
-		printf("%s hasn't been detected.\n", disease->name);
-		fprintf(EndLog,"%s hasn't been detected.\n", disease->name);
-		printf("%s has rampaged around the world for %d days.\n", disease->name, day_counter);
+		printf("%s", disease->name);
+		PrintColored(" has not been detected.\n", PURPLE);
+		fprintf(EndLog,"%s has not been detected.\n", disease->name);
+		printf("%s", disease->name);
+		PrintColored(" has rampaged around the world for ", PURPLE);
+		printf("%d", day_counter);
+		PrintColored(" days.\n", PURPLE);
 		fprintf(EndLog,"%s has rampaged around the world for %d days.\n", disease->name, day_counter);
-		printf("The entire world population has died from the disease.\n");
+		PrintColored("The entire world population has died from the disease.\n", PURPLE);
 		fprintf(EndLog,"The entire world population has died from the disease.\n");
 		printf("This log was also saved to the file %s.txt", disease->name);
 	}
 	else if (world->disease_detected == 0 && world->healthy_people >= 0) {
-		printf("%s hasn't been detected.\n", disease->name);
-		fprintf(EndLog, "%s hasn't been detected.\n", disease->name);
-		printf("%s has rampaged around the world for %d days.\n", disease->name, day_counter);
+		printf("%s", disease->name);
+		PrintColored(" has not been detected.\n", BLUE);
+		fprintf(EndLog, "%s has not been detected.\n", disease->name);
+		printf("%s", disease->name);
+		PrintColored(" has rampaged around the world for ", BLUE);
+		printf("%d", day_counter);
+		PrintColored(" days.\n", BLUE);
 		fprintf(EndLog, "%s has rampaged around the world for %d days.\n", disease->name, day_counter);
-		printf("Eventually The disease killed itself\n");
-		fprintf(EndLog,"Eventually The disease killed itself\n");
+		PrintColored("Eventually The disease killed itself.\n", BLUE);
+		fprintf(EndLog,"Eventually The disease killed itself.\n");
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
 		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
 	}
 	else if (world->disease_detected == 1 && world->disease_cured == 0) {
-		printf("%s hasn been detected.\n", disease->name);
-		fprintf(EndLog, "%s hasn been detected.\n", disease->name);
-		printf("%s has rampaged around the world for %d days but wasn't stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
-		fprintf(EndLog, "%s has rampaged around the world for %d daysbut wasn't stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
-		printf("Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n");
+		printf("%s", disease->name);
+		PrintColored(" has not been detected.\n", PURPLE);
+		fprintf(EndLog, "%s has not been detected.\n", disease->name);
+		printf("%s", disease->name);
+		PrintColored(" has rampaged around the world for ", PURPLE);
+		printf("%d", day_counter);
+		PrintColored(" days but was not stopped in time, the entire world was eradicated.\n", PURPLE);
+		fprintf(EndLog, "%s has rampaged around the world for %d daysbut was not stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
+		PrintColored("Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n", PURPLE);
 		fprintf(EndLog, "Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n");
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
 		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
 	}
 	else if (world->disease_detected == 1 && world->disease_cured == 1) {
-		printf("%s has been detected.\n", disease->name);
+		printf("%s ", disease->name);
+		PrintColored("has been detected.\n", BLUE);
 		fprintf(EndLog, "%s has been detected.\n", disease->name);
-		printf("%s has rampaged around the world for %d days but was eventually contained and cured.\n", disease->name, day_counter);
+		printf("%s ", disease->name);
+		PrintColored("has rampaged around the world for ", BLUE);
+		printf("%d", day_counter);
+		PrintColored(" days but was eventually contained and cured.\n",BLUE);
 		fprintf(EndLog, "%s has rampaged around the world for %d days but was eventually contained and cured.\n", disease->name, day_counter);
-		printf("Thanks to global cooperation and rapid medical advancements, humanity managed to develop a cure and eradicate the disease.\n");
+		PrintColored("Thanks to global cooperation and rapid medical advancements, humanity managed to develop a cure and eradicate the disease.\n", BLUE);
 		fprintf(EndLog, "Thanks to global cooperation and rapid medical advancements, humanity managed to develop a cure and eradicate the disease.\n");
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
