@@ -20,7 +20,7 @@ typedef struct Regions {
 typedef struct World {
     int disease_detected;// 0-1
     int disease_cured;// 0-1
-    long long healthy_people;// long long is a 64 bit number neccesary to represent a world population of 8 bilion
+    long long healthy_people;// 64 bit number neccesary to represent a population of 8 bilion
     long long sick_people;
     long long dead_people;
     double vaccine_progress;// 0-3000
