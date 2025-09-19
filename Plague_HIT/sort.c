@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "FileFuncs.h"
 #include "sort.h"
 #include "world.h"
 
@@ -65,7 +66,7 @@ void AppendToFile(AffectedRegions* affected_array) {
         printf("Error opening file for appending.\n");
         return;
     }
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < region_amount; i++) {
         fprintf(file, "Region: %s, Affected Percentage: %d%%\n", affected_array->name, affected_array->affected_percentage);
     }
     fclose(file);

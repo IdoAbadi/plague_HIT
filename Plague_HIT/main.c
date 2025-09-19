@@ -36,6 +36,6 @@ void main() {
     }
     PrintEndDiseaseStats(&world, &disease);
     PrintEndLog(&disease, &world, day_counter, world_regions_copy);
-    printf("end");
+    printf("\nEnd");
     freeRegions(world_regions);
 }

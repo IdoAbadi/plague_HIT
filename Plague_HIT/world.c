@@ -162,7 +162,7 @@ void DayLoop(Regions* current_region, Disease* disease, World* world, int day_co
     double total_research_progress = 0.0;
     while (current_region) {
 		//do actions on regions
-        if (current_region->healthy_people < 0) {
+        if (current_region->healthy_people < 0) {// saftey error fixing
             current_region->healthy_people = 0;
         }
         else
@@ -304,7 +304,7 @@ void public_opinion_escalate(Regions* region, Disease* disease) { // implemented
         PrintColored(" dont follow regulations\n", YELLOW);
     }
     else {
-        disease->infectiousness = (int)(disease->infectiousness * 1.1);
+        disease->infectiousness = (int)(disease->infectiousness * 1.08);
         PrintColored("Public in ", YELLOW);
         printf("%s", region->name);
         PrintColored(" dont follow regulations\n", YELLOW);
