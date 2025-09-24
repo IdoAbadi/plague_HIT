@@ -734,7 +734,7 @@ void PrintEndDiseaseStats(World* world, Disease* disease) {
     else {
         PrintColored("\n=== GAME OVER! THE DISEASE HAS ELIMINATED HUMANITY! ===\n", RED);
     }
-    PrintColored("Final World Status:\n", BLUE);
+    PrintColored("Final disease parameters:\n", BLUE);
     printf("Infectiousness: %d\n", disease->infectiousness);
     printf("Severity: %d\n", disease->severity);
     printf("Lethality: %d\n", disease->lethality);

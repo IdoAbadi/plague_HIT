@@ -110,14 +110,14 @@ void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world
 	}
 	else if (world->disease_detected == 0 && world->healthy_people >= 0) {
 		printf("%s", disease->name);
-		PrintColored(" has not been detected.\n", BLUE);
+		PrintColored(" has not been detected.\n", YELLOW);
 		fprintf(EndLog, "%s has not been detected.\n", disease->name);
 		printf("%s", disease->name);
-		PrintColored(" has rampaged around the world for ", BLUE);
+		PrintColored(" has rampaged around the world for ", YELLOW);
 		printf("%d", day_counter);
-		PrintColored(" days.\n", BLUE);
+		PrintColored(" days.\n", YELLOW);
 		fprintf(EndLog, "%s has rampaged around the world for %d days.\n", disease->name, day_counter);
-		PrintColored("Eventually The disease killed itself.\n", BLUE);
+		PrintColored("Eventually The disease killed itself.\n", YELLOW);
 		fprintf(EndLog,"Eventually The disease killed itself.\n");
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
@@ -125,15 +125,13 @@ void PrintEndLog(Disease* disease, World* world, int day_counter, Regions* world
 	}
 	else if (world->disease_detected == 1 && world->disease_cured == 0) {
 		printf("%s", disease->name);
-		PrintColored(" has not been detected.\n", PURPLE);
-		fprintf(EndLog, "%s has not been detected.\n", disease->name);
+		PrintColored(" has been detected.\n", PINK);
+		fprintf(EndLog, "%s has been detected.\n", disease->name);
 		printf("%s", disease->name);
-		PrintColored(" has rampaged around the world for ", PURPLE);
+		PrintColored(" has rampaged around the world for ", PINK);
 		printf("%d", day_counter);
-		PrintColored(" days but was not stopped in time, the entire world was eradicated.\n", PURPLE);
-		fprintf(EndLog, "%s has rampaged around the world for %d daysbut was not stopped in time, the entire world was eradicated.\n", disease->name, day_counter);
-		PrintColored("Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n", PURPLE);
-		fprintf(EndLog, "Containment efforts failed and the disease spread uncontrollably, leading to the collapse of societies worldwide.\n");
+		PrintColored(" days but was not stopped by humanity, infact it was so wildly lethal it destroyed itself.\n", PINK);
+		fprintf(EndLog, "%s has rampaged around the world for %d days but was not stopped by humanity, infact it was so wildly lethal it destroyed itself.\n", disease->name, day_counter);
 		printf("For a full log with a list of all regions sorted from most affected to least affected check the file called %s.txt", disease->name);
 		AffectedRegions* affected_Region_List = SortAffectedRegions(world_regions);
 		SaveAffectedRegionListToFile(affected_Region_List, EndLog);
